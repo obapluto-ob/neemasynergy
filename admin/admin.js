@@ -112,12 +112,11 @@ function initAdmin() {
 /* ---- LOAD EXISTING IMAGES FROM SERVER ---- */
 async function loadExistingImages() {
   try {
-    const res  = await fetch('/admin/api/images', {
-      headers: { 'x-admin-token': AUTH_TOKEN }
-    });
+    const res  = await fetch('/api/settings');
     const data = await res.json();
-    Object.entries(data).forEach(([key, filePath]) => {
-      if (filePath) applyImage(key, filePath + '?t=' + Date.now());
+    const images = data.images || {};
+    Object.entries(images).forEach(([key, url]) => {
+      if (url) applyImage(key, url);
     });
   } catch {
     showToast('Could not load existing images', true);
@@ -304,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Auto login if session token exists
   if (AUTH_TOKEN) {
-    fetch('/admin/api/images', { headers: { 'x-admin-token': AUTH_TOKEN } })
+    fetch('/admin/api/settings', { headers: { 'x-admin-token': AUTH_TOKEN } })
       .then(r => { if (r.ok) showPanel(); })
       .catch(() => {});
   }
