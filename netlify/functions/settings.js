@@ -6,6 +6,12 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
+function getSettingsStore() {
+  const siteID = process.env.NETLIFY_SITE_ID || '7906f6f9-1b5f-429f-a307-c158a8cc3d71';
+  const token  = process.env.NETLIFY_TOKEN  || process.env.NETLIFY_ACCESS_TOKEN;
+  return getStore({ name: 'site-settings', siteID, token });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type,x-admin-token' } };
@@ -14,7 +20,7 @@ exports.handler = async (event) => {
   const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
 
   try {
-    const store    = getStore('site-settings');
+    const store    = getSettingsStore();
     const existing = await store.get('settings', { type: 'json' }).catch(() => ({}));
     const data     = existing || {};
 

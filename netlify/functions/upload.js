@@ -20,6 +20,12 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
+function getSettingsStore() {
+  const siteID = process.env.NETLIFY_SITE_ID || '7906f6f9-1b5f-429f-a307-c158a8cc3d71';
+  const token  = process.env.NETLIFY_TOKEN  || process.env.NETLIFY_ACCESS_TOKEN;
+  return getStore({ name: 'site-settings', siteID, token });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   if (!requireAuth(event)) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
@@ -41,8 +47,8 @@ exports.handler = async (event) => {
       invalidate: true,
     });
 
-    // Save URL to Netlify Blobs — store images inside site-settings store
-    const store    = getStore('site-settings');
+    // Save URL to Netlify Blobs
+    const store    = getSettingsStore();
     const existing = await store.get('settings', { type: 'json' }).catch(() => ({}));
     const current  = existing || {};
     const images   = Object.assign(current.images || {}, { [key]: result.secure_url });
