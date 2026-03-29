@@ -1,5 +1,5 @@
 const cloudinary = require('cloudinary').v2;
-const crypto     = require('crypto');
+const { getStore } = require('@netlify/blobs');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -25,8 +25,7 @@ exports.handler = async (event) => {
   if (!requireAuth(event)) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
 
   try {
-    const body = JSON.parse(event.body || '{}');
-    const { key, dataUrl } = body;
+    const { key, dataUrl } = JSON.parse(event.body || '{}');
 
     if (!key || !IMAGE_KEYS.includes(key)) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid image key' }) };
@@ -35,48 +34,18 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid image data' }) };
     }
 
+    // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(dataUrl, {
       public_id: `neema-synergy/${key}`,
       overwrite: true,
       invalidate: true,
     });
 
-    // Save URL to JSONBin so public site can read it
-    const JSONBIN_URL = process.env.JSONBIN_URL;
-    const JSONBIN_KEY = process.env.JSONBIN_API_KEY;
-    if (JSONBIN_URL && JSONBIN_KEY) {
-      const getRes = await fetch(JSONBIN_URL, {
-        headers: { 'X-Master-Key': JSONBIN_KEY, 'X-Bin-Meta': 'false' }
-      });
-      const current = getRes.ok ? await getRes.json() : {};
-
-      if (!current.images) current.images = {};
-      current.images[key] = result.secure_url;
-
-      const putRes = await fetch(JSONBIN_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
-        body: JSON.stringify(current)
-      });
-
-      if (!putRes.ok) {
-        const errText = await putRes.text();
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ 
-            success: true, 
-            url: result.secure_url, 
-            key,
-            warning: `Cloudinary OK but JSONBin failed: ${putRes.status} ${errText}`
-          })
-        };
-      }
-    } else {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ success: true, url: result.secure_url, key, warning: 'JSONBin env vars missing' })
-      };
-    }
+    // Save URL to Netlify Blobs
+    const store    = getStore('site-images');
+    const existing = await store.get('images', { type: 'json' }).catch(() => ({}));
+    const updated  = Object.assign(existing || {}, { [key]: result.secure_url });
+    await store.setJSON('images', updated);
 
     return {
       statusCode: 200,

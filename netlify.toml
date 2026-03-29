@@ -2,6 +2,9 @@
   publish = "."
   functions = "netlify/functions"
 
+[blobs]
+  enabled = true
+
 # ---- API ROUTES ----
 [[redirects]]
   from   = "/admin/api/login"
