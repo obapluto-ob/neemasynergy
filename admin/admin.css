@@ -102,10 +102,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   border-right: 1px solid rgba(212,175,55,0.12);
   display: flex;
   flex-direction: column;
-  padding: 32px 0;
+  padding: 32px 0 0;
   position: fixed;
   top: 0; left: 0; bottom: 0;
   z-index: 100;
+  overflow: hidden;
 }
 .sidebar-logo {
   font-family: var(--font-head);
@@ -127,7 +128,12 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-y: auto;
+  padding-bottom: 8px;
 }
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.25); border-radius: 2px; }
 .nav-item {
   display: block;
   padding: 12px 28px;
@@ -141,10 +147,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
 .nav-item:hover { color: var(--gold); background: rgba(212,175,55,0.04); }
 .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(212,175,55,0.06); }
 .btn-logout {
-  margin: 16px 28px 0;
-  padding: 10px;
+  flex-shrink: 0;
+  padding: 16px 28px;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.07);
   color: var(--grey);
   font-family: var(--font);
   font-size: 0.75rem;
@@ -152,8 +159,9 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s;
+  text-align: left;
 }
-.btn-logout:hover { border-color: var(--gold); color: var(--gold); }
+.btn-logout:hover { color: var(--gold); background: rgba(212,175,55,0.04); }
 
 /* ---- MAIN CONTENT ---- */
 .admin-main {
@@ -404,3 +412,52 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   .image-manager { grid-template-columns: 1fr; }
   .portfolio-grid-admin { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---- SETTINGS FORMS ---- */
+.settings-form {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.settings-form .form-group { display: flex; flex-direction: column; gap: 6px; }
+.settings-form label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.settings-form input,
+.settings-form select,
+.settings-form textarea {
+  background: var(--black-mid);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white);
+  padding: 12px 14px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  resize: vertical;
+}
+.settings-form input:focus,
+.settings-form select:focus,
+.settings-form textarea:focus { border-color: var(--gold); }
+.settings-form select option { background: var(--black-soft); }
+.btn-save {
+  padding: 13px 32px;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+.btn-save:hover { background: var(--gold-light); }

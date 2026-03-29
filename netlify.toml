@@ -1,6 +1,39 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
 
+# ---- API ROUTES ----
+[[redirects]]
+  from   = "/admin/api/login"
+  to     = "/.netlify/functions/login"
+  status = 200
+
+[[redirects]]
+  from   = "/admin/api/upload"
+  to     = "/.netlify/functions/upload"
+  status = 200
+
+[[redirects]]
+  from   = "/admin/api/image/*"
+  to     = "/.netlify/functions/delete-image"
+  status = 200
+
+[[redirects]]
+  from   = "/admin/api/images"
+  to     = "/.netlify/functions/images"
+  status = 200
+
+[[redirects]]
+  from   = "/admin/api/settings"
+  to     = "/.netlify/functions/settings"
+  status = 200
+
+[[redirects]]
+  from   = "/api/settings"
+  to     = "/.netlify/functions/settings"
+  status = 200
+
+# ---- PAGE ROUTES ----
 [[redirects]]
   from = "/pages/about"
   to   = "/pages/about.html"

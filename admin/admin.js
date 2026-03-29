@@ -106,6 +106,7 @@ function initAdmin() {
   buildGrid('teamGrid',      TEAM_ITEMS);
   initDragDrop();
   loadExistingImages();
+  loadSettings();
 }
 
 /* ---- LOAD EXISTING IMAGES FROM SERVER ---- */
@@ -189,32 +190,30 @@ function buildGrid(containerId, items) {
 /* ---- UPLOAD HANDLER ---- */
 async function handleUpload(file, key, btnEl) {
   if (!file) return;
+  if (btnEl) btnEl.textContent = 'Uploading…';
 
-  if (btnEl) { btnEl.textContent = 'Uploading…'; }
-
-  const formData = new FormData();
-  formData.append('image', file);
-  formData.append('key', key);
-
-  try {
-    const res  = await fetch('/admin/api/upload', {
-      method: 'POST',
-      headers: { 'x-admin-token': AUTH_TOKEN },
-      body: formData
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      applyImage(key, data.path + '?t=' + Date.now());
-      showToast('Uploaded — ' + file.name);
-    } else {
-      showToast(data.error || 'Upload failed', true);
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const dataUrl = e.target.result;
+    try {
+      const res  = await fetch('/admin/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': AUTH_TOKEN },
+        body: JSON.stringify({ key, dataUrl })
+      });
+      const data = await res.json();
+      if (data.success) {
+        applyImage(key, data.url);
+        showToast('Uploaded — ' + file.name);
+      } else {
+        showToast(data.error || 'Upload failed', true);
+      }
+    } catch {
+      showToast('Upload failed — server error', true);
     }
-  } catch {
-    showToast('Upload failed — server error', true);
-  }
-
-  if (btnEl) { btnEl.textContent = 'Upload Image'; }
+    if (btnEl) btnEl.textContent = 'Upload Image';
+  };
+  reader.readAsDataURL(file);
 }
 
 /* ---- DELETE HANDLER ---- */
@@ -310,3 +309,108 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => {});
   }
 });
+
+/* ---- SETTINGS ---- */
+async function loadSettings() {
+  try {
+    const res  = await fetch('/admin/api/settings', { headers: { 'x-admin-token': AUTH_TOKEN } });
+    const data = await res.json();
+
+    // Social
+    if (data.instagram) document.getElementById('s-instagram').value = data.instagram;
+    if (data.facebook)  document.getElementById('s-facebook').value  = data.facebook;
+    if (data.linkedin)  document.getElementById('s-linkedin').value  = data.linkedin;
+    if (data.twitter)   document.getElementById('s-twitter').value   = data.twitter;
+    if (data.youtube)   document.getElementById('s-youtube').value   = data.youtube;
+
+    // Contact
+    if (data.email)    document.getElementById('s-email').value    = data.email;
+    if (data.phone)    document.getElementById('s-phone').value    = data.phone;
+    if (data.location) document.getElementById('s-location').value = data.location;
+    if (data.hours)    document.getElementById('s-hours').value    = data.hours;
+
+    // About
+    if (data.tagline)      document.getElementById('s-tagline').value      = data.tagline;
+    if (data.about1)       document.getElementById('s-about1').value       = data.about1;
+    if (data.about2)       document.getElementById('s-about2').value       = data.about2;
+    if (data.years)        document.getElementById('s-years').value        = data.years;
+    if (data.events)       document.getElementById('s-events').value       = data.events;
+    if (data.satisfaction) document.getElementById('s-satisfaction').value = data.satisfaction;
+    if (data.clients)      document.getElementById('s-clients').value      = data.clients;
+
+    // WhatsApp
+    if (data.whatsapp)     document.getElementById('s-whatsapp').value      = data.whatsapp;
+    if (data.whatsappMsg)  document.getElementById('s-whatsapp-msg').value  = data.whatsappMsg;
+    if (data.whatsappShow !== undefined) document.getElementById('s-whatsapp-show').value = String(data.whatsappShow);
+
+    // Maps
+    if (data.mapsUrl) {
+      document.getElementById('s-maps').value = data.mapsUrl;
+      showMapsPreview(data.mapsUrl);
+    }
+  } catch {
+    showToast('Could not load settings', true);
+  }
+}
+
+async function saveSettings(section) {
+  const payload = {};
+
+  if (section === 'social') {
+    payload.instagram = document.getElementById('s-instagram').value.trim();
+    payload.facebook  = document.getElementById('s-facebook').value.trim();
+    payload.linkedin  = document.getElementById('s-linkedin').value.trim();
+    payload.twitter   = document.getElementById('s-twitter').value.trim();
+    payload.youtube   = document.getElementById('s-youtube').value.trim();
+  }
+  if (section === 'contact') {
+    payload.email    = document.getElementById('s-email').value.trim();
+    payload.phone    = document.getElementById('s-phone').value.trim();
+    payload.location = document.getElementById('s-location').value.trim();
+    payload.hours    = document.getElementById('s-hours').value.trim();
+  }
+  if (section === 'about') {
+    payload.tagline      = document.getElementById('s-tagline').value.trim();
+    payload.about1       = document.getElementById('s-about1').value.trim();
+    payload.about2       = document.getElementById('s-about2').value.trim();
+    payload.years        = document.getElementById('s-years').value.trim();
+    payload.events       = document.getElementById('s-events').value.trim();
+    payload.satisfaction = document.getElementById('s-satisfaction').value.trim();
+    payload.clients      = document.getElementById('s-clients').value.trim();
+  }
+  if (section === 'whatsapp') {
+    payload.whatsapp     = document.getElementById('s-whatsapp').value.trim();
+    payload.whatsappMsg  = document.getElementById('s-whatsapp-msg').value.trim();
+    payload.whatsappShow = document.getElementById('s-whatsapp-show').value === 'true';
+  }
+  if (section === 'maps') {
+    payload.mapsUrl = document.getElementById('s-maps').value.trim();
+    showMapsPreview(payload.mapsUrl);
+  }
+
+  try {
+    const res  = await fetch('/admin/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': AUTH_TOKEN },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) showToast('Settings saved');
+    else showToast('Save failed', true);
+  } catch {
+    showToast('Save failed — server error', true);
+  }
+}
+
+function showMapsPreview(url) {
+  const preview = document.getElementById('maps-preview');
+  if (!preview || !url) return;
+  preview.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.width = '100%';
+  iframe.height = '300';
+  iframe.style.border = '1px solid rgba(212,175,55,0.2)';
+  iframe.allowFullscreen = true;
+  preview.appendChild(iframe);
+}

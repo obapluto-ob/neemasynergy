@@ -38,6 +38,11 @@
         <a href="#" class="nav-item" data-tab="portfolio">Portfolio Images</a>
         <a href="#" class="nav-item" data-tab="services">Services Images</a>
         <a href="#" class="nav-item" data-tab="team">Team Photos</a>
+        <a href="#" class="nav-item" data-tab="social">Social Media</a>
+        <a href="#" class="nav-item" data-tab="contact-info">Contact Info</a>
+        <a href="#" class="nav-item" data-tab="about-text">About Content</a>
+        <a href="#" class="nav-item" data-tab="whatsapp">WhatsApp</a>
+        <a href="#" class="nav-item" data-tab="maps">Google Maps</a>
       </nav>
       <button class="btn-logout" onclick="adminLogout()">Logout</button>
     </aside>
@@ -144,6 +149,92 @@
           <p>Upload team member photos shown on the About page.</p>
         </div>
         <div class="portfolio-grid-admin" id="teamGrid"></div>
+      </div>
+
+      <!-- SOCIAL MEDIA -->
+      <div class="tab-content" id="tab-social">
+        <div class="tab-header">
+          <h2>Social Media Links</h2>
+          <p>Update your social media URLs. Leave blank to hide the icon.</p>
+        </div>
+        <div class="settings-form" id="socialForm">
+          <div class="form-group"><label>Instagram URL</label><input type="url" id="s-instagram" placeholder="https://instagram.com/yourpage" /></div>
+          <div class="form-group"><label>Facebook URL</label><input type="url" id="s-facebook" placeholder="https://facebook.com/yourpage" /></div>
+          <div class="form-group"><label>LinkedIn URL</label><input type="url" id="s-linkedin" placeholder="https://linkedin.com/company/yourpage" /></div>
+          <div class="form-group"><label>Twitter / X URL</label><input type="url" id="s-twitter" placeholder="https://x.com/yourpage" /></div>
+          <div class="form-group"><label>YouTube URL</label><input type="url" id="s-youtube" placeholder="https://youtube.com/@yourchannel" /></div>
+          <button class="btn-save" onclick="saveSettings('social')">Save Social Links</button>
+        </div>
+      </div>
+
+      <!-- CONTACT INFO -->
+      <div class="tab-content" id="tab-contact-info">
+        <div class="tab-header">
+          <h2>Contact Information</h2>
+          <p>Update the contact details shown on the site and footer.</p>
+        </div>
+        <div class="settings-form">
+          <div class="form-group"><label>Email Address</label><input type="email" id="s-email" placeholder="info@neemasynergy.com" /></div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" id="s-phone" placeholder="+254 700 000 000" /></div>
+          <div class="form-group"><label>Location / Address</label><input type="text" id="s-location" placeholder="Nairobi, Kenya" /></div>
+          <div class="form-group"><label>Office Hours</label><input type="text" id="s-hours" placeholder="Mon – Fri: 8:00 AM – 6:00 PM" /></div>
+          <button class="btn-save" onclick="saveSettings('contact')">Save Contact Info</button>
+        </div>
+      </div>
+
+      <!-- ABOUT CONTENT -->
+      <div class="tab-content" id="tab-about-text">
+        <div class="tab-header">
+          <h2>About Content</h2>
+          <p>Update the text and stats shown on the About section.</p>
+        </div>
+        <div class="settings-form">
+          <div class="form-group"><label>Company Tagline</label><input type="text" id="s-tagline" placeholder="Where Creativity Meets Precision" /></div>
+          <div class="form-group"><label>About Paragraph 1</label><textarea id="s-about1" rows="3" placeholder="First paragraph about the company…"></textarea></div>
+          <div class="form-group"><label>About Paragraph 2</label><textarea id="s-about2" rows="3" placeholder="Second paragraph…"></textarea></div>
+          <div class="form-group"><label>Years of Excellence</label><input type="number" id="s-years" placeholder="8" /></div>
+          <div class="form-group"><label>Events Delivered</label><input type="number" id="s-events" placeholder="250" /></div>
+          <div class="form-group"><label>Client Satisfaction %</label><input type="number" id="s-satisfaction" placeholder="98" /></div>
+          <div class="form-group"><label>Trusted Clients</label><input type="number" id="s-clients" placeholder="120" /></div>
+          <button class="btn-save" onclick="saveSettings('about')">Save About Content</button>
+        </div>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div class="tab-content" id="tab-whatsapp">
+        <div class="tab-header">
+          <h2>WhatsApp Button</h2>
+          <p>Set the WhatsApp number for the floating chat button on the site.</p>
+        </div>
+        <div class="settings-form">
+          <div class="form-group"><label>WhatsApp Number (with country code)</label><input type="tel" id="s-whatsapp" placeholder="254700000000" /></div>
+          <div class="form-group"><label>Pre-filled Message</label><input type="text" id="s-whatsapp-msg" placeholder="Hello! I'd like to enquire about your event services." /></div>
+          <div class="form-group">
+            <label>Show WhatsApp Button</label>
+            <select id="s-whatsapp-show">
+              <option value="true">Yes — show button</option>
+              <option value="false">No — hide button</option>
+            </select>
+          </div>
+          <button class="btn-save" onclick="saveSettings('whatsapp')">Save WhatsApp Settings</button>
+        </div>
+      </div>
+
+      <!-- GOOGLE MAPS -->
+      <div class="tab-content" id="tab-maps">
+        <div class="tab-header">
+          <h2>Google Maps</h2>
+          <p>Paste your Google Maps embed URL to show your location on the Contact page.</p>
+        </div>
+        <div class="settings-form">
+          <div class="form-group">
+            <label>Google Maps Embed URL</label>
+            <input type="url" id="s-maps" placeholder="https://www.google.com/maps/embed?pb=..." />
+            <small style="color:#888;font-size:0.75rem;margin-top:4px;display:block;">Go to Google Maps → Share → Embed a map → copy the src URL only</small>
+          </div>
+          <button class="btn-save" onclick="saveSettings('maps')">Save Map</button>
+          <div id="maps-preview" style="margin-top:24px;"></div>
+        </div>
       </div>
 
     </main>

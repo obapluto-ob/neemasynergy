@@ -164,6 +164,33 @@ app.post('/admin/api/change-password', requireAuth, (req, res) => {
   res.json({ success: true });
 });
 
+// ---- SITE SETTINGS (social, contact, about, whatsapp, maps) ----
+const SETTINGS_FILE = path.join(__dirname, 'data', 'settings.json');
+
+function getSettings() {
+  try {
+    if (!fs.existsSync(path.join(__dirname, 'data'))) fs.mkdirSync(path.join(__dirname, 'data'));
+    if (!fs.existsSync(SETTINGS_FILE)) fs.writeFileSync(SETTINGS_FILE, JSON.stringify({}));
+    return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+  } catch { return {}; }
+}
+
+app.get('/admin/api/settings', requireAuth, (req, res) => {
+  res.json(getSettings());
+});
+
+app.post('/admin/api/settings', requireAuth, (req, res) => {
+  const current  = getSettings();
+  const updated  = Object.assign(current, req.body);
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2));
+  res.json({ success: true });
+});
+
+// Public settings endpoint (for site pages to read)
+app.get('/api/settings', (req, res) => {
+  res.json(getSettings());
+});
+
 // ---- START ----
 app.listen(PORT, () => {
   console.log(`Neema Synergy server running at http://localhost:${PORT}`);
