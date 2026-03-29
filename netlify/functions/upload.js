@@ -42,10 +42,15 @@ exports.handler = async (event) => {
     });
 
     // Save URL to Netlify Blobs
-    const store    = getStore('site-images');
-    const existing = await store.get('images', { type: 'json' }).catch(() => ({}));
-    const updated  = Object.assign(existing || {}, { [key]: result.secure_url });
-    await store.setJSON('images', updated);
+    try {
+      const store    = getStore('site-images');
+      const existing = await store.get('images', { type: 'json' }).catch(() => ({}));
+      const updated  = Object.assign(existing || {}, { [key]: result.secure_url });
+      await store.setJSON('images', updated);
+    } catch (blobErr) {
+      // Blobs unavailable — upload still succeeded, URL is in Cloudinary
+      console.warn('Blobs store unavailable:', blobErr.message);
+    }
 
     return {
       statusCode: 200,

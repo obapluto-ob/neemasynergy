@@ -107,8 +107,24 @@ function requireAuth(req, res, next) {
   next();
 }
 
-// Upload image
-app.post('/admin/api/upload', requireAuth, upload.single('image'), (req, res) => {
+// Upload image — accepts both multipart (legacy) and JSON dataUrl
+app.post('/admin/api/upload', requireAuth, (req, res, next) => {
+  // If JSON body with dataUrl, handle directly
+  if (req.headers['content-type'] && req.headers['content-type'].includes('application/json')) {
+    const { key, dataUrl } = req.body;
+    if (!key || !IMAGE_DESTINATIONS[key]) return res.status(400).json({ error: 'Invalid image key' });
+    if (!dataUrl || !dataUrl.startsWith('data:image/')) return res.status(400).json({ error: 'Invalid image data' });
+
+    const base64 = dataUrl.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64, 'base64');
+    const dest   = path.join(__dirname, IMAGE_DESTINATIONS[key]);
+    const destDir = path.dirname(dest);
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+    fs.writeFileSync(dest, buffer);
+    return res.json({ success: true, url: '/' + IMAGE_DESTINATIONS[key], key });
+  }
+  next();
+}, upload.single('image'), (req, res) => {
   const { key } = req.body;
   if (!key || !IMAGE_DESTINATIONS[key]) {
     return res.status(400).json({ error: 'Invalid image key' });
@@ -176,7 +192,13 @@ function getSettings() {
 }
 
 app.get('/admin/api/settings', requireAuth, (req, res) => {
-  res.json(getSettings());
+  const settings = getSettings();
+  const images = {};
+  Object.entries(IMAGE_DESTINATIONS).forEach(([key, filePath]) => {
+    const full = path.join(__dirname, filePath);
+    if (fs.existsSync(full)) images[key] = '/' + filePath;
+  });
+  res.json({ ...settings, images });
 });
 
 app.post('/admin/api/settings', requireAuth, (req, res) => {
@@ -188,7 +210,14 @@ app.post('/admin/api/settings', requireAuth, (req, res) => {
 
 // Public settings endpoint (for site pages to read)
 app.get('/api/settings', (req, res) => {
-  res.json(getSettings());
+  const settings = getSettings();
+  // Build images map from disk
+  const images = {};
+  Object.entries(IMAGE_DESTINATIONS).forEach(([key, filePath]) => {
+    const full = path.join(__dirname, filePath);
+    if (fs.existsSync(full)) images[key] = '/' + filePath;
+  });
+  res.json({ ...settings, images });
 });
 
 // ---- START ----
