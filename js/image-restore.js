@@ -1,6 +1,6 @@
 /* ============================================
    NEEMA SYNERGY — IMAGE RESTORE
-   Loads image URLs from /api/settings (Cloudinary)
+   Reads Cloudinary URLs from public /api/settings
    ============================================ */
 
 (function () {
@@ -28,8 +28,9 @@
     'team-3':    ['img[alt="Aisha M."]'],
   };
 
-  function applyImages(map) {
-    Object.entries(map).forEach(([key, url]) => {
+  function applyImages(images) {
+    if (!images) return;
+    Object.entries(images).forEach(([key, url]) => {
       if (!url || !selectors[key]) return;
       selectors[key].forEach(sel => {
         document.querySelectorAll(sel).forEach(el => {
@@ -37,8 +38,7 @@
           el.style.display = 'block';
           el.onerror = function () {
             this.style.display = 'none';
-            const parent = this.parentElement;
-            if (parent) parent.classList.remove('has-image');
+            if (this.parentElement) this.parentElement.classList.remove('has-image');
           };
           el.onload = function () {
             this.style.display = 'block';
@@ -52,17 +52,10 @@
   }
 
   function run() {
-    // Try server API first (works locally and on Netlify)
-    fetch('/admin/api/images')
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(applyImages)
-      .catch(() => {
-        // Fallback: try public settings for Cloudinary URLs
-        fetch('/api/settings')
-          .then(r => r.json())
-          .then(s => { if (s.images) applyImages(s.images); })
-          .catch(() => {});
-      });
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(s => applyImages(s.images))
+      .catch(() => {});
   }
 
   if (document.readyState === 'loading') {

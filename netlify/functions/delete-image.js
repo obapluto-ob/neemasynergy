@@ -21,6 +21,25 @@ exports.handler = async (event) => {
 
   try {
     await cloudinary.uploader.destroy(`neema-synergy/${key}`, { invalidate: true });
+
+    // Remove URL from JSONBin
+    const JSONBIN_URL = process.env.JSONBIN_URL;
+    const JSONBIN_KEY = process.env.JSONBIN_API_KEY;
+    if (JSONBIN_URL && JSONBIN_KEY) {
+      const current = await fetch(JSONBIN_URL, {
+        headers: { 'X-Master-Key': JSONBIN_KEY, 'X-Bin-Meta': 'false' }
+      }).then(r => r.json()).catch(() => ({}));
+
+      if (current.images) {
+        delete current.images[key];
+        await fetch(JSONBIN_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+          body: JSON.stringify(current)
+        });
+      }
+    }
+
     return { statusCode: 200, body: JSON.stringify({ success: true }) };
   } catch (err) {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
