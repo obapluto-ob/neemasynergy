@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | Neema Synergy Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <div class="login-logo">Neema <span>Synergy</span></div>
+      <p class="login-sub">Admin Panel</p>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter admin password" />
+      </div>
+      <button class="btn-admin">Login</button>
+      <p id="loginError" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" style="display:none;">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">Neema <span>Synergy</span></div>
+      <p class="sidebar-sub">Admin Panel</p>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-tab="logo">Logo</a>
+        <a href="#" class="nav-item" data-tab="hero">Hero Section</a>
+        <a href="#" class="nav-item" data-tab="about">About Image</a>
+        <a href="#" class="nav-item" data-tab="portfolio">Portfolio Images</a>
+        <a href="#" class="nav-item" data-tab="services">Services Images</a>
+        <a href="#" class="nav-item" data-tab="team">Team Photos</a>
+      </nav>
+      <button class="btn-logout" onclick="adminLogout()">Logout</button>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- LOGO -->
+      <div class="tab-content active" id="tab-logo">
+        <div class="tab-header">
+          <h2>Logo</h2>
+          <p>Update the site logo shown in the navbar and footer.</p>
+        </div>
+        <div class="image-manager">
+          <div class="current-image-box">
+            <p class="box-label">Current Logo</p>
+            <div class="preview-wrap">
+              <img id="preview-logo" src="" alt="Logo" onerror="this.src=''" />
+            </div>
+          </div>
+          <div class="upload-box" id="drop-logo" data-key="logo" data-dest="../images/logo.jpg">
+            <div class="upload-inner">
+              <div class="upload-icon">↑</div>
+              <p>Drag & drop or click to upload</p>
+              <span>PNG, JPG, SVG — recommended size: 200×80px</span>
+              <input type="file" accept="image/*" onchange="handleUpload(this.files[0],'logo',this.closest('.upload-box'))" />
+            </div>
+          </div>
+          <button class="btn-delete-single" onclick="handleDelete('logo',null)">Delete Logo</button>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="tab-content" id="tab-hero">
+        <div class="tab-header">
+          <h2>Hero Section</h2>
+          <p>Upload a background image for the homepage hero.</p>
+        </div>
+        <div class="image-manager">
+          <div class="current-image-box">
+            <p class="box-label">Current Hero Background</p>
+            <div class="preview-wrap landscape">
+              <img id="preview-hero" src="" alt="Hero" onerror="this.src=''" />
+            </div>
+          </div>
+          <div class="upload-box" data-key="hero">
+            <div class="upload-inner">
+              <div class="upload-icon">↑</div>
+              <p>Drag & drop or click to upload</p>
+              <span>JPG, PNG — recommended: 1920×1080px</span>
+              <input type="file" accept="image/*" onchange="handleUpload(this.files[0],'hero',null)" />
+            </div>
+          </div>
+          <button class="btn-delete-single" onclick="handleDelete('hero',null)">Delete Hero Image</button>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="tab-content" id="tab-about">
+        <div class="tab-header">
+          <h2>About Image</h2>
+          <p>The main image shown in the About section on the homepage and About page.</p>
+        </div>
+        <div class="image-manager">
+          <div class="current-image-box">
+            <p class="box-label">Current About Image</p>
+            <div class="preview-wrap portrait">
+              <img id="preview-about" src="" alt="About" onerror="this.src=''" />
+            </div>
+          </div>
+          <div class="upload-box" data-key="about">
+            <div class="upload-inner">
+              <div class="upload-icon">↑</div>
+              <p>Drag & drop or click to upload</p>
+              <span>JPG, PNG — recommended: 800×1000px</span>
+              <input type="file" accept="image/*" onchange="handleUpload(this.files[0],'about',null)" />
+            </div>
+          </div>
+          <button class="btn-delete-single" onclick="handleDelete('about',null)">Delete About Image</button>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO -->
+      <div class="tab-content" id="tab-portfolio">
+        <div class="tab-header">
+          <h2>Portfolio Images</h2>
+          <p>Upload images for each portfolio event. Images are saved to <code>images/portfolio/</code></p>
+        </div>
+        <div class="portfolio-grid-admin" id="portfolioGrid"></div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="tab-content" id="tab-services">
+        <div class="tab-header">
+          <h2>Services Images</h2>
+          <p>Upload images for each service on the Services page.</p>
+        </div>
+        <div class="portfolio-grid-admin" id="servicesGrid"></div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="tab-content" id="tab-team">
+        <div class="tab-header">
+          <h2>Team Photos</h2>
+          <p>Upload team member photos shown on the About page.</p>
+        </div>
+        <div class="portfolio-grid-admin" id="teamGrid"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

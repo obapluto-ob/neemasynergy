@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Neema Synergy Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/png" href="/images/logo.jpg" />
+  <style>
+    .page-hero {
+      min-height: 45vh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 64px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1408 60%, #0a0a0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(212,175,55,0.07) 0%, transparent 65%);
+    }
+    .page-hero-content { position: relative; z-index: 1; padding-top: 120px; }
+    .breadcrumb { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { margin: 0 8px; }
+  </style>
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <img src="/images/logo.jpg" alt="Neema Synergy Events Logo" onerror="this.style.display='none'" />
+        <div class="nav-logo-text">Neema <span>Synergy</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pages/about.html">About</a></li>
+        <li><a href="/pages/services.html">Services</a></li>
+        <li><a href="/pages/portfolio.html">Portfolio</a></li>
+        <li><a href="/pages/contact.html" class="btn btn-outline nav-cta active">Get a Quote</a></li>
+      </ul>
+      <div class="hamburger" role="button" tabindex="0"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span>Contact</div>
+      <span class="section-label">Let's Talk</span>
+      <h1>Get in <span class="gold">Touch</span></h1>
+    </div>
+  </div>
+
+  <section id="contact" style="background:var(--black);">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <span class="section-label">Reach Us</span>
+          <h2>We'd Love to Hear <span class="gold">From You</span></h2>
+          <div class="divider"></div>
+          <p>Whether you have a clear vision or just a spark of an idea, we're here to help you bring it to life. Reach out and let's start the conversation.</p>
+
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">@</div>
+              <div>
+                <strong>Email</strong>
+                <span>info@neemasynergy.com</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">T</div>
+              <div>
+                <strong>Phone</strong>
+                <span>+254 700 000 000</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">L</div>
+              <div>
+                <strong>Location</strong>
+                <span>Nairobi, Kenya</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">H</div>
+              <div>
+                <strong>Office Hours</strong>
+                <span>Mon – Fri: 8:00 AM – 6:00 PM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" placeholder="Your first name" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" placeholder="Your last name" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="+254 700 000 000" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="service">Service Interested In</label>
+            <select id="service" name="service">
+              <option value="" disabled selected>Select a service</option>
+              <option value="corporate">Corporate Events</option>
+              <option value="social">Social Events</option>
+              <option value="activation">Brand Activations</option>
+              <option value="virtual">Virtual & Hybrid Events</option>
+              <option value="production">Event Production</option>
+              <option value="livestream">Livestream & Broadcast</option>
+              <option value="other">Other / Not Sure Yet</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventDate">Event Date (Approximate)</label>
+              <input type="date" id="eventDate" name="eventDate" />
+            </div>
+            <div class="form-group">
+              <label for="guestCount">Expected Guest Count</label>
+              <select id="guestCount" name="guestCount">
+                <option value="" disabled selected>Select range</option>
+                <option>Under 50</option>
+                <option>50 – 150</option>
+                <option>150 – 300</option>
+                <option>300 – 500</option>
+                <option>500 – 1,000</option>
+                <option>1,000+</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Tell Us About Your Event</label>
+            <textarea id="message" name="message" placeholder="Share your vision, ideas, or any specific requirements…" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0;">
+        <p>&copy; <span id="copy-year"></span> Neema Synergy Events. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">IG</a>
+          <a href="#" class="social-link">in</a>
+          <a href="#" class="social-link">𝕏</a>
+          <a href="#" class="social-link">fb</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/image-restore.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/image-restore.js"></script>
+</body>
+</html>

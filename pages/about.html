@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Neema Synergy Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/png" href="/images/logo.jpg" />
+  <style>
+    .page-hero {
+      min-height: 45vh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 64px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1408 60%, #0a0a0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(212,175,55,0.07) 0%, transparent 65%);
+    }
+    .page-hero-content { position: relative; z-index: 1; padding-top: 120px; }
+    .breadcrumb {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 1rem;
+    }
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { margin: 0 8px; }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .value-card {
+      padding: 40px 32px;
+      border: 1px solid rgba(212,175,55,0.12);
+      background: var(--black-soft);
+      text-align: center;
+    }
+    .value-icon { font-size: 2.2rem; margin-bottom: 1rem; display: block; }
+    .value-card h3 { margin-bottom: 0.75rem; font-size: 1.2rem; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .team-card { text-align: center; }
+    .team-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #1a1408, #2a1f0a);
+      border: 1px solid rgba(212,175,55,0.15);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--grey);
+      font-size: 0.75rem;
+      overflow: hidden;
+    }
+    .team-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .team-card h3 { font-size: 1.2rem; margin-bottom: 0.25rem; }
+    .team-card span { font-size: 0.8rem; color: var(--gold); letter-spacing: 0.08em; }
+    @media (max-width: 768px) {
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid   { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <img src="/images/logo.jpg" alt="Neema Synergy Events Logo" />
+        <div class="nav-logo-text">Neema <span>Synergy</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pages/about.html" class="active">About</a></li>
+        <li><a href="/pages/services.html">Services</a></li>
+        <li><a href="/pages/portfolio.html">Portfolio</a></li>
+        <li><a href="/pages/contact.html" class="btn btn-outline nav-cta">Get a Quote</a></li>
+      </ul>
+      <div class="hamburger" role="button" tabindex="0"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span>About Us</div>
+      <span class="section-label">Our Story</span>
+      <h1>About <span class="gold">Neema Synergy</span></h1>
+    </div>
+  </div>
+
+  <!-- MISSION -->
+  <section style="background:var(--black-soft);">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="section-label">Who We Are</span>
+          <h2>Built on <span class="gold">Purpose</span></h2>
+          <div class="divider"></div>
+          <p>Neema Synergy Events was founded on a singular belief: that every event — regardless of scale — deserves the same level of creative ambition and operational excellence.</p>
+          <p>We operate on a hybrid model that combines in-house planning and creative direction with strategic vendor partnerships for logistics and technical production. This gives us the agility of a boutique firm with the capability of a full-scale production house.</p>
+          <p>Our team brings together expertise in event design, project management, technical production, and client relations — ensuring every touchpoint of your event is handled with care and precision.</p>
+        </div>
+        <div class="about-image">
+          <div class="about-image-frame">
+            <img src="" alt="Neema Synergy team" onerror="this.parentElement.innerHTML='<span style=\'color:#888;font-size:0.8rem\'>IMAGE PLACEHOLDER</span>'" />
+          </div>
+          <div class="about-badge">
+            <strong class="count-up" data-target="8" data-suffix="+">8+</strong>
+            <span>Years of Excellence</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section style="background:var(--black);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">What Drives Us</span>
+        <h2>Our Core <span class="gold">Values</span></h2>
+        <div class="divider center"></div>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <span class="value-icon">01</span>
+          <h3>Precision</h3>
+          <p>Every detail is planned, every contingency anticipated. We leave nothing to chance.</p>
+        </div>
+        <div class="value-card">
+          <span class="value-icon">02</span>
+          <h3>Creativity</h3>
+          <p>We bring fresh, bold ideas to every brief — never templated, always tailored.</p>
+        </div>
+        <div class="value-card">
+          <span class="value-icon">03</span>
+          <h3>Partnership</h3>
+          <p>We work as an extension of your team, not just a vendor. Your success is our success.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section style="background:var(--black-soft);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">The People Behind the Magic</span>
+        <h2>Meet the <span class="gold">Team</span></h2>
+        <div class="divider center"></div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-photo">
+            <img src="" alt="Team Member" onerror="this.parentElement.innerHTML='PHOTO'" />
+          </div>
+          <h3>Neema W.</h3>
+          <span>Founder & Creative Director</span>
+        </div>
+        <div class="team-card">
+          <div class="team-photo">
+            <img src="" alt="Team Member" onerror="this.parentElement.innerHTML='PHOTO'" />
+          </div>
+          <h3>Brian O.</h3>
+          <span>Head of Production</span>
+        </div>
+        <div class="team-card">
+          <div class="team-photo">
+            <img src="" alt="Team Member" onerror="this.parentElement.innerHTML='PHOTO'" />
+          </div>
+          <h3>Aisha M.</h3>
+          <span>Senior Event Manager</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background:var(--gold);padding:80px 0;">
+    <div class="container" style="text-align:center;">
+      <h2 style="color:var(--black);margin-bottom:1rem;">Ready to Work With Us?</h2>
+      <p style="color:rgba(0,0,0,0.7);max-width:480px;margin:0 auto 2rem;">Let's talk about your next event and how we can make it extraordinary.</p>
+      <a href="/pages/contact.html" class="btn" style="background:var(--black);color:var(--gold);">Get in Touch</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0;">
+        <p>&copy; <span id="copy-year"></span> Neema Synergy Events. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">IG</a>
+          <a href="#" class="social-link">in</a>
+          <a href="#" class="social-link">𝕏</a>
+          <a href="#" class="social-link">fb</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/image-restore.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/image-restore.js"></script>
+</body>
+</html>

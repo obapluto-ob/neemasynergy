@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services | Neema Synergy Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/png" href="/images/logo.jpg" />
+  <style>
+    .page-hero {
+      min-height: 45vh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 64px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1408 60%, #0a0a0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(212,175,55,0.07) 0%, transparent 65%);
+    }
+    .page-hero-content { position: relative; z-index: 1; padding-top: 120px; }
+    .breadcrumb { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--gold); }
+    .breadcrumb span { margin: 0 8px; }
+
+    .service-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding: 80px 0;
+      border-bottom: 1px solid rgba(212,175,55,0.1);
+    }
+    .service-detail:last-child { border-bottom: none; }
+    .service-detail.reverse { direction: rtl; }
+    .service-detail.reverse > * { direction: ltr; }
+    .service-detail-image {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #1a1408, #2a1f0a);
+      border: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .service-detail-image::after {
+      content: 'IMAGE COMING SOON';
+      position: absolute;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(212,175,55,0.35);
+      border: 1px dashed rgba(212,175,55,0.2);
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .service-detail-image.has-image::after { display: none; }
+    .service-detail-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+    }
+    .service-detail-text h2 { margin-bottom: 0.5rem; }
+    .service-detail-text p  { margin-bottom: 1rem; }
+    .service-includes {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .service-includes li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: #cccccc;
+    }
+    .service-includes li::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+    @media (max-width: 768px) {
+      .service-detail { grid-template-columns: 1fr; gap: 40px; }
+      .service-detail.reverse { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <img src="/images/logo.jpg" alt="Neema Synergy Events Logo" />
+        <div class="nav-logo-text">Neema <span>Synergy</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pages/about.html">About</a></li>
+        <li><a href="/pages/services.html" class="active">Services</a></li>
+        <li><a href="/pages/portfolio.html">Portfolio</a></li>
+        <li><a href="/pages/contact.html" class="btn btn-outline nav-cta">Get a Quote</a></li>
+      </ul>
+      <div class="hamburger" role="button" tabindex="0"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container page-hero-content">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span>Services</div>
+      <span class="section-label">What We Offer</span>
+      <h1>Our <span class="gold">Services</span></h1>
+    </div>
+  </div>
+
+  <section style="background:var(--black);">
+    <div class="container">
+
+      <div class="service-detail">
+        <div class="service-detail-image">
+          <img src="" alt="Corporate Events" onerror="this.style.display='none'" />
+        </div>
+        <div class="service-detail-text">
+          <span class="section-label">01</span>
+          <h2>Corporate <span class="gold">Events</span></h2>
+          <div class="divider"></div>
+          <p>We plan and execute high-stakes corporate events that reflect your brand's professionalism and ambition. From intimate board dinners to large-scale conferences, we handle every detail.</p>
+          <ul class="service-includes">
+            <li>Annual General Meetings (AGMs)</li>
+            <li>Conferences & Summits</li>
+            <li>Product Launches</li>
+            <li>Corporate Retreats & Team Building</li>
+            <li>Award Ceremonies & Galas</li>
+          </ul>
+          <a href="/pages/contact.html" class="btn btn-gold" style="margin-top:2rem;">Request a Quote</a>
+        </div>
+      </div>
+
+      <div class="service-detail reverse">
+        <div class="service-detail-image">
+          <img src="" alt="Social Events" onerror="this.style.display='none'" />
+        </div>
+        <div class="service-detail-text">
+          <span class="section-label">02</span>
+          <h2>Social <span class="gold">Events</span></h2>
+          <div class="divider"></div>
+          <p>Life's most meaningful moments deserve to be celebrated with elegance and intention. We craft social events that are deeply personal, beautifully designed, and flawlessly executed.</p>
+          <ul class="service-includes">
+            <li>Weddings & Engagement Parties</li>
+            <li>Milestone Birthday Celebrations</li>
+            <li>Anniversary Galas</li>
+            <li>Baby Showers & Naming Ceremonies</li>
+            <li>Private Dinner Parties</li>
+          </ul>
+          <a href="/pages/contact.html" class="btn btn-gold" style="margin-top:2rem;">Request a Quote</a>
+        </div>
+      </div>
+
+      <div class="service-detail">
+        <div class="service-detail-image">
+          <img src="" alt="Brand Activations" onerror="this.style.display='none'" />
+        </div>
+        <div class="service-detail-text">
+          <span class="section-label">03</span>
+          <h2>Brand <span class="gold">Activations</span></h2>
+          <div class="divider"></div>
+          <p>We create immersive brand experiences that connect your audience to your brand on an emotional level — driving awareness, engagement, and loyalty.</p>
+          <ul class="service-includes">
+            <li>Experiential Marketing Campaigns</li>
+            <li>Pop-Up Events & Installations</li>
+            <li>Trade Show & Exhibition Stands</li>
+            <li>Consumer Engagement Events</li>
+            <li>Influencer & Media Events</li>
+          </ul>
+          <a href="/pages/contact.html" class="btn btn-gold" style="margin-top:2rem;">Request a Quote</a>
+        </div>
+      </div>
+
+      <div class="service-detail reverse">
+        <div class="service-detail-image">
+          <img src="" alt="Virtual Events" onerror="this.style.display='none'" />
+        </div>
+        <div class="service-detail-text">
+          <span class="section-label">04</span>
+          <h2>Virtual & Hybrid <span class="gold">Events</span></h2>
+          <div class="divider"></div>
+          <p>We bridge the gap between physical and digital audiences, delivering seamless hybrid experiences that engage everyone — wherever they are in the world.</p>
+          <ul class="service-includes">
+            <li>Virtual Conferences & Webinars</li>
+            <li>Hybrid Event Production</li>
+            <li>Online Award Ceremonies</li>
+            <li>Virtual Team Building</li>
+            <li>Digital Event Platforms</li>
+          </ul>
+          <a href="/pages/contact.html" class="btn btn-gold" style="margin-top:2rem;">Request a Quote</a>
+        </div>
+      </div>
+
+      <div class="service-detail">
+        <div class="service-detail-image">
+          <img src="" alt="Event Production" onerror="this.style.display='none'" />
+        </div>
+        <div class="service-detail-text">
+          <span class="section-label">05</span>
+          <h2>Event <span class="gold">Production</span></h2>
+          <div class="divider"></div>
+          <p>Our technical production team manages all the behind-the-scenes elements that make an event look and feel world-class.</p>
+          <ul class="service-includes">
+            <li>Stage Design & Set Build</li>
+            <li>Lighting Design & Programming</li>
+            <li>Sound & AV Systems</li>
+            <li>LED Screens & Visual Displays</li>
+            <li>On-Site Technical Management</li>
+          </ul>
+          <a href="/pages/contact.html" class="btn btn-gold" style="margin-top:2rem;">Request a Quote</a>
+        </div>
+      </div>
+
+      <div class="service-detail reverse">
+        <div class="service-detail-image">
+          <img src="" alt="Livestream" onerror="this.style.display='none'" />
+        </div>
+        <div class="service-detail-text">
+          <span class="section-label">06</span>
+          <h2>Livestream & <span class="gold">Broadcast</span></h2>
+          <div class="divider"></div>
+          <p>Extend your event's reach beyond the venue with professional livestream and broadcast integration that maintains broadcast-quality standards.</p>
+          <ul class="service-includes">
+            <li>Multi-Camera Live Production</li>
+            <li>Platform Streaming (YouTube, Zoom, Custom)</li>
+            <li>Live Graphics & Lower Thirds</li>
+            <li>Post-Event Video Editing</li>
+            <li>Replay & On-Demand Distribution</li>
+          </ul>
+          <a href="/pages/contact.html" class="btn btn-gold" style="margin-top:2rem;">Request a Quote</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section style="background:var(--gold);padding:80px 0;">
+    <div class="container" style="text-align:center;">
+      <h2 style="color:var(--black);margin-bottom:1rem;">Not Sure Which Service You Need?</h2>
+      <p style="color:rgba(0,0,0,0.7);max-width:480px;margin:0 auto 2rem;">Let's have a conversation. We'll help you figure out exactly what your event needs.</p>
+      <a href="/pages/contact.html" class="btn" style="background:var(--black);color:var(--gold);">Talk to Us</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0;">
+        <p>&copy; <span id="copy-year"></span> Neema Synergy Events. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">IG</a>
+          <a href="#" class="social-link">in</a>
+          <a href="#" class="social-link">𝕏</a>
+          <a href="#" class="social-link">fb</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/image-restore.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/image-restore.js"></script>
+</body>
+</html>
