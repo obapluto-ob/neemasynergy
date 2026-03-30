@@ -344,6 +344,7 @@ async function loadSettings() {
     if (data.whatsapp)     document.getElementById('s-whatsapp').value      = data.whatsapp;
     if (data.whatsappMsg)  document.getElementById('s-whatsapp-msg').value  = data.whatsappMsg;
     if (data.whatsappShow !== undefined) document.getElementById('s-whatsapp-show').value = String(data.whatsappShow);
+    if (data.whatsapp) showWhatsAppSaved(data);
 
     // Maps
     if (data.mapsUrl) {
@@ -380,6 +381,11 @@ async function saveSettings(section) {
     payload.satisfaction = document.getElementById('s-satisfaction').value.trim();
     payload.clients      = document.getElementById('s-clients').value.trim();
   }
+  if (section === 'whatsapp_delete') {
+    payload.whatsapp     = '';
+    payload.whatsappMsg  = '';
+    payload.whatsappShow = false;
+  }
   if (section === 'whatsapp') {
     payload.whatsapp     = document.getElementById('s-whatsapp').value.trim();
     payload.whatsappMsg  = document.getElementById('s-whatsapp-msg').value.trim();
@@ -397,11 +403,50 @@ async function saveSettings(section) {
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    if (data.success) showToast('Settings saved');
-    else showToast('Save failed', true);
+    if (data.success) {
+      showToast('Settings saved');
+      if (section === 'whatsapp') showWhatsAppSaved(payload);
+    } else showToast('Save failed', true);
   } catch {
     showToast('Save failed — server error', true);
   }
+}
+
+/* ---- WHATSAPP UI ---- */
+function showWhatsAppSaved(data) {
+  const num    = data.whatsapp    || document.getElementById('s-whatsapp').value;
+  const msg    = data.whatsappMsg || document.getElementById('s-whatsapp-msg').value;
+  const active = data.whatsappShow !== false;
+  document.getElementById('whatsapp-display').textContent     = '+' + num;
+  document.getElementById('whatsapp-msg-display').textContent = msg;
+  document.getElementById('whatsapp-status').textContent      = active ? 'Visible on site' : 'Hidden';
+  document.getElementById('whatsapp-status').style.color      = active ? '#2d7a2d' : '#888';
+  document.getElementById('whatsapp-saved').style.display     = 'block';
+  document.getElementById('whatsapp-form').style.display      = 'none';
+}
+
+function editWhatsApp() {
+  document.getElementById('whatsapp-saved').style.display = 'none';
+  document.getElementById('whatsapp-form').style.display  = 'flex';
+}
+
+function cancelWhatsApp() {
+  const num = document.getElementById('s-whatsapp').value;
+  if (num) showWhatsAppSaved({});
+  else {
+    document.getElementById('whatsapp-saved').style.display = 'none';
+    document.getElementById('whatsapp-form').style.display  = 'flex';
+  }
+}
+
+async function deleteWhatsApp() {
+  if (!confirm('Remove WhatsApp button from the site?')) return;
+  await saveSettings('whatsapp_delete');
+  document.getElementById('s-whatsapp').value     = '';
+  document.getElementById('s-whatsapp-msg').value = '';
+  document.getElementById('whatsapp-saved').style.display = 'none';
+  document.getElementById('whatsapp-form').style.display  = 'flex';
+  showToast('WhatsApp button removed');
 }
 
 function showMapsPreview(url) {

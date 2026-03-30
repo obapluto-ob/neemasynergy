@@ -496,3 +496,30 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   align-self: flex-start;
 }
 .btn-save:hover { background: var(--gold-light); }
+
+/* ---- SAVED CARD ---- */
+.saved-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 32px;
+  background: var(--black-soft);
+  border: 1px solid rgba(212,175,55,0.2);
+  max-width: 600px;
+  margin-bottom: 24px;
+}
+.saved-info { flex: 1; }
+.saved-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.saved-actions .btn-save,
+.saved-actions .btn-delete-single {
+  width: 100px;
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+}
