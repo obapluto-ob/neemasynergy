@@ -2,12 +2,6 @@
   publish = "."
   functions = "netlify/functions"
 
-[images]
-  remote_images = []
-
-[blobs]
-  enabled = true
-
 # ---- API ROUTES ----
 [[redirects]]
   from   = "/admin/api/login"

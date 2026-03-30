@@ -1,4 +1,10 @@
-const { getStore } = require('@netlify/blobs');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 function requireAuth(event) {
   const token  = event.headers['x-admin-token'];
@@ -6,37 +12,53 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
-function getSettingsStore() {
-  const siteID = process.env.NETLIFY_SITE_ID || '7906f6f9-1b5f-429f-a307-c158a8cc3d71';
-  const token  = process.env.NETLIFY_TOKEN  || process.env.NETLIFY_ACCESS_TOKEN;
-  return getStore({ name: 'site-settings', siteID, token });
+async function getData(filename) {
+  try {
+    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/${filename}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if (res.ok) return res.json();
+  } catch {}
+  return {};
+}
+
+async function saveData(filename, data) {
+  const json    = JSON.stringify(data);
+  const base64  = Buffer.from(json).toString('base64');
+  const dataUri = `data:application/json;base64,${base64}`;
+  await cloudinary.uploader.upload(dataUri, {
+    public_id:     `neema-synergy/${filename}`,
+    resource_type: 'raw',
+    overwrite:     true,
+    invalidate:    true,
+  });
 }
 
 exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type,x-admin-token' } };
+  if (event.httpMethod === 'GET') {
+    try {
+      const settings = await getData('settings.json');
+      const images   = await getData('image-map.json');
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ ...settings, images })
+      };
+    } catch (err) {
+      return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    }
   }
 
-  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
-
-  try {
-    const store    = getSettingsStore();
-    const existing = await store.get('settings', { type: 'json' }).catch(() => ({}));
-    const data     = existing || {};
-
-    if (event.httpMethod === 'GET') {
-      return { statusCode: 200, headers, body: JSON.stringify(data) };
-    }
-
-    if (event.httpMethod === 'POST') {
-      if (!requireAuth(event)) return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
+  if (event.httpMethod === 'POST') {
+    if (!requireAuth(event)) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+    try {
+      const current = await getData('settings.json');
       const updates = JSON.parse(event.body || '{}');
-      const merged  = Object.assign(data, updates);
-      await store.setJSON('settings', merged);
-      return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+      const merged  = Object.assign(current, updates);
+      await saveData('settings.json', merged);
+      return { statusCode: 200, body: JSON.stringify({ success: true }) };
+    } catch (err) {
+      return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
     }
-  } catch (err) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 
   return { statusCode: 405, body: 'Method Not Allowed' };

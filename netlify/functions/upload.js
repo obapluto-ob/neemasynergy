@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary').v2;
-const { getStore } = require('@netlify/blobs');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -20,10 +19,26 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
-function getSettingsStore() {
-  const siteID = process.env.NETLIFY_SITE_ID || '7906f6f9-1b5f-429f-a307-c158a8cc3d71';
-  const token  = process.env.NETLIFY_TOKEN  || process.env.NETLIFY_ACCESS_TOKEN;
-  return getStore({ name: 'site-settings', siteID, token });
+async function getImageMap() {
+  try {
+    const res = await fetch(
+      `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`
+    );
+    if (res.ok) return res.json();
+  } catch {}
+  return {};
+}
+
+async function saveImageMap(map) {
+  const json    = JSON.stringify(map);
+  const base64  = Buffer.from(json).toString('base64');
+  const dataUri = `data:application/json;base64,${base64}`;
+  await cloudinary.uploader.upload(dataUri, {
+    public_id:    'neema-synergy/image-map',
+    resource_type: 'raw',
+    overwrite:    true,
+    invalidate:   true,
+  });
 }
 
 exports.handler = async (event) => {
@@ -40,19 +55,17 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid image data' }) };
     }
 
-    // Upload to Cloudinary
+    // Upload image to Cloudinary
     const result = await cloudinary.uploader.upload(dataUrl, {
-      public_id: `neema-synergy/${key}`,
-      overwrite: true,
+      public_id:  `neema-synergy/${key}`,
+      overwrite:  true,
       invalidate: true,
     });
 
-    // Save URL to Netlify Blobs
-    const store    = getSettingsStore();
-    const existing = await store.get('settings', { type: 'json' }).catch(() => ({}));
-    const current  = existing || {};
-    const images   = Object.assign(current.images || {}, { [key]: result.secure_url });
-    await store.setJSON('settings', { ...current, images });
+    // Update image map stored in Cloudinary
+    const map    = await getImageMap();
+    map[key]     = result.secure_url;
+    await saveImageMap(map);
 
     return {
       statusCode: 200,

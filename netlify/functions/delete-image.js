@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary').v2;
-const { getStore } = require('@netlify/blobs');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,6 +12,27 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
+async function getImageMap() {
+  try {
+    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`;
+    const res = await fetch(url);
+    if (res.ok) return res.json();
+  } catch {}
+  return {};
+}
+
+async function saveImageMap(map) {
+  const json    = JSON.stringify(map);
+  const base64  = Buffer.from(json).toString('base64');
+  const dataUri = `data:application/json;base64,${base64}`;
+  await cloudinary.uploader.upload(dataUri, {
+    public_id:     'neema-synergy/image-map',
+    resource_type: 'raw',
+    overwrite:     true,
+    invalidate:    true,
+  });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'DELETE') return { statusCode: 405, body: 'Method Not Allowed' };
   if (!requireAuth(event)) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
@@ -21,14 +41,11 @@ exports.handler = async (event) => {
   if (!key) return { statusCode: 400, body: JSON.stringify({ error: 'Invalid key' }) };
 
   try {
-    // Delete from Cloudinary
     await cloudinary.uploader.destroy(`neema-synergy/${key}`, { invalidate: true });
 
-    // Remove from Netlify Blobs
-    const store   = getStore('site-images');
-    const current = await store.get('images', { type: 'json' }).catch(() => ({}));
-    delete current[key];
-    await store.setJSON('images', current);
+    const map = await getImageMap();
+    delete map[key];
+    await saveImageMap(map);
 
     return { statusCode: 200, body: JSON.stringify({ success: true }) };
   } catch (err) {
