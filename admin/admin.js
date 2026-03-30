@@ -204,10 +204,12 @@ async function handleUpload(file, key, textEl) {
         body: JSON.stringify({ key, dataUrl })
       });
       const data = await res.json();
+      console.log('Upload response:', data);
       if (data.success) {
         applyImage(key, data.url);
         showToast('Uploaded — ' + file.name);
       } else {
+        console.error('Upload failed:', data);
         showToast(data.error || 'Upload failed', true);
       }
     } catch {
