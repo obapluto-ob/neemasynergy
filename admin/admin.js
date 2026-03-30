@@ -112,12 +112,17 @@ function initAdmin() {
 /* ---- LOAD EXISTING IMAGES FROM SERVER ---- */
 async function loadExistingImages() {
   try {
-    const res  = await fetch('/api/settings');
-    const data = await res.json();
+    const res    = await fetch('/api/settings');
+    const data   = await res.json();
     const images = data.images || {};
     Object.entries(images).forEach(([key, url]) => {
       if (url) applyImage(key, url);
     });
+    // Fallback: show disk logo if no Cloudinary URL yet
+    if (!images.logo) {
+      const preview = document.getElementById('preview-logo');
+      if (preview) { preview.src = '/images/logo.jpg'; preview.style.display = 'block'; }
+    }
   } catch {
     showToast('Could not load existing images', true);
   }
