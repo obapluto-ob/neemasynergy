@@ -162,11 +162,14 @@ function buildGrid(containerId, items) {
 
     const label = document.createElement('label');
     label.className = 'card-upload-btn';
-    label.textContent = 'Upload Image';
+    const labelText = document.createElement('span');
+    labelText.textContent = 'Upload Image';
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
-    fileInput.addEventListener('change', function () { handleUpload(this.files[0], item.key, label); });
+    fileInput.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;';
+    fileInput.addEventListener('change', function () { handleUpload(this.files[0], item.key, labelText); });
+    label.appendChild(labelText);
     label.appendChild(fileInput);
 
     const deleteBtn = document.createElement('button');
@@ -187,9 +190,9 @@ function buildGrid(containerId, items) {
 }
 
 /* ---- UPLOAD HANDLER ---- */
-async function handleUpload(file, key, btnEl) {
+async function handleUpload(file, key, textEl) {
   if (!file) return;
-  if (btnEl) btnEl.textContent = 'Uploading…';
+  if (textEl) textEl.textContent = 'Uploading…';
 
   const reader = new FileReader();
   reader.onload = async e => {
@@ -210,7 +213,7 @@ async function handleUpload(file, key, btnEl) {
     } catch {
       showToast('Upload failed — server error', true);
     }
-    if (btnEl) btnEl.textContent = 'Upload Image';
+    if (textEl) textEl.textContent = 'Upload Image';
   };
   reader.readAsDataURL(file);
 }
