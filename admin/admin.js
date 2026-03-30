@@ -326,11 +326,19 @@ async function loadSettings() {
     const data = await res.json();
 
     // Social
-    if (data.instagram) document.getElementById('s-instagram').value = data.instagram;
-    if (data.facebook)  document.getElementById('s-facebook').value  = data.facebook;
-    if (data.linkedin)  document.getElementById('s-linkedin').value  = data.linkedin;
-    if (data.twitter)   document.getElementById('s-twitter').value   = data.twitter;
-    if (data.youtube)   document.getElementById('s-youtube').value   = data.youtube;
+    const socialData = {
+      instagram: data.instagram || '',
+      facebook:  data.facebook  || '',
+      linkedin:  data.linkedin  || '',
+      twitter:   data.twitter   || '',
+      youtube:   data.youtube   || '',
+    };
+    document.getElementById('s-instagram').value = socialData.instagram;
+    document.getElementById('s-facebook').value  = socialData.facebook;
+    document.getElementById('s-linkedin').value  = socialData.linkedin;
+    document.getElementById('s-twitter').value   = socialData.twitter;
+    document.getElementById('s-youtube').value   = socialData.youtube;
+    showSocialSaved(socialData);
 
     // Contact
     const defaultContact = {
@@ -385,7 +393,7 @@ async function loadSettings() {
     // Maps
     if (data.mapsUrl) {
       document.getElementById('s-maps').value = data.mapsUrl;
-      showMapsPreview(data.mapsUrl);
+      showMapsSaved(data.mapsUrl);
     }
   } catch {
     showToast('Could not load settings', true);
@@ -444,6 +452,8 @@ async function saveSettings(section) {
       if (section === 'whatsapp') showWhatsAppSaved(payload);
       if (section === 'about')    showAboutSaved(payload);
       if (section === 'contact')  showContactSaved(payload);
+      if (section === 'social')   showSocialSaved(payload);
+      if (section === 'maps')     showMapsSaved(payload.mapsUrl);
     } else showToast('Save failed', true);
   } catch {
     showToast('Save failed — server error', true);
@@ -574,4 +584,72 @@ async function deleteContact() {
   document.getElementById('s-location').value = defaults.location;
   document.getElementById('s-hours').value    = defaults.hours;
   await saveSettings('contact');
+}
+
+/* ---- SOCIAL UI ---- */
+function showSocialSaved(data) {
+  document.getElementById('social-ig-display').textContent = data.instagram || 'Not set';
+  document.getElementById('social-fb-display').textContent = data.facebook  || 'Not set';
+  document.getElementById('social-li-display').textContent = data.linkedin  || 'Not set';
+  document.getElementById('social-tw-display').textContent = data.twitter   || 'Not set';
+  document.getElementById('social-yt-display').textContent = data.youtube   || 'Not set';
+  document.getElementById('social-saved').style.display = 'block';
+  document.getElementById('social-form').style.display  = 'none';
+}
+
+function editSocial() {
+  document.getElementById('social-saved').style.display = 'none';
+  document.getElementById('social-form').style.display  = 'flex';
+}
+
+function cancelSocial() {
+  document.getElementById('social-saved').style.display = 'block';
+  document.getElementById('social-form').style.display  = 'none';
+}
+
+async function deleteSocial() {
+  if (!confirm('Clear all social media links?')) return;
+  ['s-instagram','s-facebook','s-linkedin','s-twitter','s-youtube'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  await saveSettings('social');
+}
+
+/* ---- MAPS UI ---- */
+function showMapsSaved(url) {
+  if (!url) return;
+  const preview = document.getElementById('maps-preview-saved');
+  if (preview) {
+    preview.innerHTML = '';
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.style.cssText = 'width:100%;height:200px;border:none;';
+    iframe.loading = 'lazy';
+    preview.appendChild(iframe);
+  }
+  document.getElementById('maps-saved').style.display = 'block';
+  document.getElementById('maps-form').style.display  = 'none';
+}
+
+function editMaps() {
+  document.getElementById('maps-saved').style.display = 'none';
+  document.getElementById('maps-form').style.display  = 'flex';
+}
+
+function cancelMaps() {
+  const url = document.getElementById('s-maps').value;
+  if (url) showMapsSaved(url);
+  else {
+    document.getElementById('maps-saved').style.display = 'none';
+    document.getElementById('maps-form').style.display  = 'flex';
+  }
+}
+
+async function deleteMaps() {
+  if (!confirm('Remove the Google Map from the contact page?')) return;
+  document.getElementById('s-maps').value = '';
+  await saveSettings('maps');
+  document.getElementById('maps-saved').style.display = 'none';
+  document.getElementById('maps-form').style.display  = 'flex';
+  showToast('Map removed');
 }

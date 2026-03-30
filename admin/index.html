@@ -157,13 +157,34 @@
           <h2>Social Media Links</h2>
           <p>Update your social media URLs. Leave blank to hide the icon.</p>
         </div>
-        <div class="settings-form" id="socialForm">
+        <div id="social-saved" style="display:none;">
+          <div class="saved-card" style="flex-direction:column;gap:16px;">
+            <div class="saved-info" style="width:100%;">
+              <span class="box-label">Current Social Links</span>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+                <p style="font-size:0.85rem;color:#ccc;">Instagram: <strong id="social-ig-display" style="color:var(--gold);"></strong></p>
+                <p style="font-size:0.85rem;color:#ccc;">Facebook: <strong id="social-fb-display" style="color:var(--gold);"></strong></p>
+                <p style="font-size:0.85rem;color:#ccc;">LinkedIn: <strong id="social-li-display" style="color:var(--gold);"></strong></p>
+                <p style="font-size:0.85rem;color:#ccc;">Twitter/X: <strong id="social-tw-display" style="color:var(--gold);"></strong></p>
+                <p style="font-size:0.85rem;color:#ccc;">YouTube: <strong id="social-yt-display" style="color:var(--gold);"></strong></p>
+              </div>
+            </div>
+            <div class="saved-actions" style="flex-direction:row;">
+              <button class="btn-save" onclick="editSocial()">Edit</button>
+              <button class="btn-delete-single" style="width:auto;padding:13px 24px;margin:0;" onclick="deleteSocial()">Clear All</button>
+            </div>
+          </div>
+        </div>
+        <div id="social-form" class="settings-form">
           <div class="form-group"><label>Instagram URL</label><input type="url" id="s-instagram" placeholder="https://instagram.com/yourpage" /></div>
           <div class="form-group"><label>Facebook URL</label><input type="url" id="s-facebook" placeholder="https://facebook.com/yourpage" /></div>
           <div class="form-group"><label>LinkedIn URL</label><input type="url" id="s-linkedin" placeholder="https://linkedin.com/company/yourpage" /></div>
           <div class="form-group"><label>Twitter / X URL</label><input type="url" id="s-twitter" placeholder="https://x.com/yourpage" /></div>
           <div class="form-group"><label>YouTube URL</label><input type="url" id="s-youtube" placeholder="https://youtube.com/@yourchannel" /></div>
-          <button class="btn-save" onclick="saveSettings('social')">Save Social Links</button>
+          <div style="display:flex;gap:12px;">
+            <button class="btn-save" onclick="saveSettings('social')">Save Social Links</button>
+            <button class="btn-delete-single" style="width:auto;padding:13px 24px;" onclick="cancelSocial()">Cancel</button>
+          </div>
         </div>
       </div>
 
@@ -294,13 +315,28 @@
           <h2>Google Maps</h2>
           <p>Paste your Google Maps embed URL to show your location on the Contact page.</p>
         </div>
-        <div class="settings-form">
+        <div id="maps-saved" style="display:none;">
+          <div class="saved-card" style="flex-direction:column;gap:16px;">
+            <div class="saved-info" style="width:100%;">
+              <span class="box-label">Map Embed Active</span>
+              <div id="maps-preview-saved" style="margin-top:12px;width:100%;height:200px;"></div>
+            </div>
+            <div class="saved-actions" style="flex-direction:row;">
+              <button class="btn-save" onclick="editMaps()">Edit URL</button>
+              <button class="btn-delete-single" style="width:auto;padding:13px 24px;margin:0;" onclick="deleteMaps()">Remove Map</button>
+            </div>
+          </div>
+        </div>
+        <div id="maps-form" class="settings-form">
           <div class="form-group">
             <label>Google Maps Embed URL</label>
             <input type="url" id="s-maps" placeholder="https://www.google.com/maps/embed?pb=..." />
             <small style="color:#888;font-size:0.75rem;margin-top:4px;display:block;">Go to Google Maps → Share → Embed a map → copy the src URL only</small>
           </div>
-          <button class="btn-save" onclick="saveSettings('maps')">Save Map</button>
+          <div style="display:flex;gap:12px;">
+            <button class="btn-save" onclick="saveSettings('maps')">Save Map</button>
+            <button class="btn-delete-single" style="width:auto;padding:13px 24px;" onclick="cancelMaps()">Cancel</button>
+          </div>
           <div id="maps-preview" style="margin-top:24px;"></div>
         </div>
       </div>
