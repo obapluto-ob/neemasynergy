@@ -409,10 +409,41 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   .portfolio-grid-admin { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .sidebar { width: 100%; height: auto; position: relative; }
-  .admin-main { margin-left: 0; padding: 24px; }
+  #adminPanel { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 20px 0 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .sidebar-logo { padding: 0 16px 2px; font-size: 1.2rem; }
+  .sidebar-sub  { display: none; }
+  .sidebar-nav  {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 8px 0;
+    border-top: 1px solid rgba(212,175,55,0.1);
+    width: 100%;
+  }
+  .sidebar-nav::-webkit-scrollbar { height: 2px; }
+  .nav-item { padding: 10px 16px; white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; }
+  .nav-item.active { border-left: none; border-bottom-color: var(--gold); }
+  .btn-logout { margin: 0 16px 12px; padding: 8px 16px; }
+  .admin-main { margin-left: 0; padding: 24px 16px; }
   .image-manager { grid-template-columns: 1fr; }
   .portfolio-grid-admin { grid-template-columns: 1fr 1fr; }
+  .tab-header h2 { font-size: 1.5rem; }
+}
+@media (max-width: 480px) {
+  .portfolio-grid-admin { grid-template-columns: 1fr; }
+  .card-actions { grid-template-columns: 1fr; }
+  .settings-form { max-width: 100%; }
+  .admin-main { padding: 16px; }
+  .login-box { padding: 32px 24px; }
 }
 
 /* ---- SETTINGS FORMS ---- */

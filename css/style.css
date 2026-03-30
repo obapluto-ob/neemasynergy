@@ -730,3 +730,75 @@ footer {
   .about-stats      { grid-template-columns: 1fr; gap: 16px; }
   .hero-actions     { flex-direction: column; }
 }
+
+/* ============================================
+   ADDITIONAL MOBILE FIXES
+   ============================================ */
+
+/* Nav logo text size on small screens */
+@media (max-width: 380px) {
+  .nav-logo-text { font-size: 1.1rem; }
+  .nav-logo img  { height: 36px; }
+  h1 { font-size: 2.2rem; }
+}
+
+/* Hero section mobile */
+@media (max-width: 768px) {
+  #hero { min-height: 100svh; }
+  .hero-content { max-width: 100%; }
+  .hero-content h1 { font-size: clamp(2rem, 8vw, 3rem); }
+  .hero-content p  { font-size: 0.95rem; }
+  .hero-scroll     { display: none; }
+}
+
+/* About badge mobile */
+@media (max-width: 480px) {
+  .about-badge { width: 90px; height: 90px; bottom: -12px; right: -8px; }
+  .about-badge strong { font-size: 1.6rem; }
+}
+
+/* Portfolio grid full page mobile */
+@media (max-width: 768px) {
+  .portfolio-grid-full { grid-template-columns: 1fr !important; }
+  .portfolio-item.large { grid-column: span 1 !important; }
+}
+
+/* Service detail mobile */
+@media (max-width: 768px) {
+  .service-detail        { grid-template-columns: 1fr !important; gap: 32px; }
+  .service-detail.reverse { direction: ltr !important; }
+}
+
+/* Team grid mobile */
+@media (max-width: 480px) {
+  .team-grid   { grid-template-columns: 1fr !important; }
+  .values-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Contact page mobile */
+@media (max-width: 480px) {
+  .contact-icon { width: 36px; height: 36px; font-size: 0.85rem; }
+}
+
+/* Footer mobile */
+@media (max-width: 380px) {
+  .footer-grid { gap: 24px; }
+  .social-links { flex-wrap: wrap; justify-content: center; }
+}
+
+/* WhatsApp button mobile */
+@media (max-width: 480px) {
+  #whatsapp-float { bottom: 20px; right: 20px; width: 48px; height: 48px; }
+}
+
+/* Page hero mobile */
+@media (max-width: 768px) {
+  .page-hero { min-height: 35vh; }
+  .page-hero-content { padding-top: 100px; }
+}
+
+/* CTA section mobile */
+@media (max-width: 480px) {
+  #cta { padding: 60px 0 !important; }
+  #cta h2 { font-size: 1.8rem; }
+}
