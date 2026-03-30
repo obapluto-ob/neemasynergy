@@ -333,10 +333,23 @@ async function loadSettings() {
     if (data.youtube)   document.getElementById('s-youtube').value   = data.youtube;
 
     // Contact
-    if (data.email)    document.getElementById('s-email').value    = data.email;
-    if (data.phone)    document.getElementById('s-phone').value    = data.phone;
-    if (data.location) document.getElementById('s-location').value = data.location;
-    if (data.hours)    document.getElementById('s-hours').value    = data.hours;
+    const defaultContact = {
+      email:    'info@neemasynergy.com',
+      phone:    '+254 700 000 000',
+      location: 'Nairobi, Kenya',
+      hours:    'Mon – Fri: 8:00 AM – 6:00 PM'
+    };
+    const contactData = {
+      email:    data.email    || defaultContact.email,
+      phone:    data.phone    || defaultContact.phone,
+      location: data.location || defaultContact.location,
+      hours:    data.hours    || defaultContact.hours,
+    };
+    document.getElementById('s-email').value    = contactData.email;
+    document.getElementById('s-phone').value    = contactData.phone;
+    document.getElementById('s-location').value = contactData.location;
+    document.getElementById('s-hours').value    = contactData.hours;
+    showContactSaved(contactData);
 
     // About
     const defaultAbout = {
@@ -430,6 +443,7 @@ async function saveSettings(section) {
       showToast('Settings saved');
       if (section === 'whatsapp') showWhatsAppSaved(payload);
       if (section === 'about')    showAboutSaved(payload);
+      if (section === 'contact')  showContactSaved(payload);
     } else showToast('Save failed', true);
   } catch {
     showToast('Save failed — server error', true);
@@ -525,4 +539,39 @@ async function deleteAbout() {
   document.getElementById('s-satisfaction').value = defaults.satisfaction;
   document.getElementById('s-clients').value      = defaults.clients;
   await saveSettings('about');
+}
+
+/* ---- CONTACT UI ---- */
+function showContactSaved(data) {
+  document.getElementById('contact-email-display').textContent    = data.email    || '';
+  document.getElementById('contact-phone-display').textContent    = data.phone    || '';
+  document.getElementById('contact-location-display').textContent = data.location || '';
+  document.getElementById('contact-hours-display').textContent    = data.hours    || '';
+  document.getElementById('contact-saved').style.display = 'block';
+  document.getElementById('contact-form').style.display  = 'none';
+}
+
+function editContact() {
+  document.getElementById('contact-saved').style.display = 'none';
+  document.getElementById('contact-form').style.display  = 'flex';
+}
+
+function cancelContact() {
+  document.getElementById('contact-saved').style.display = 'block';
+  document.getElementById('contact-form').style.display  = 'none';
+}
+
+async function deleteContact() {
+  if (!confirm('Reset contact info to defaults?')) return;
+  const defaults = {
+    email: 'info@neemasynergy.com',
+    phone: '+254 700 000 000',
+    location: 'Nairobi, Kenya',
+    hours: 'Mon \u2013 Fri: 8:00 AM \u2013 6:00 PM'
+  };
+  document.getElementById('s-email').value    = defaults.email;
+  document.getElementById('s-phone').value    = defaults.phone;
+  document.getElementById('s-location').value = defaults.location;
+  document.getElementById('s-hours').value    = defaults.hours;
+  await saveSettings('contact');
 }
