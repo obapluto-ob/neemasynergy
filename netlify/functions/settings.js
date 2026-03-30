@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const https      = require('https');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,16 +13,22 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
+function httpsGet(url) {
+  return new Promise((resolve) => {
+    https.get(url, res => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch { resolve({}); }
+      });
+    }).on('error', () => resolve({}));
+  });
+}
+
 async function getData(filename) {
-  try {
-    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/${filename}?t=${Date.now()}`;
-    const res = await fetch(url);
-    if (res.ok) {
-      const text = await res.text();
-      return JSON.parse(text);
-    }
-  } catch {}
-  return {};
+  const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/${filename}?t=${Date.now()}`;
+  return httpsGet(url);
 }
 
 async function saveData(filename, data) {

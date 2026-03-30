@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const https      = require('https');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,13 +13,17 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
-async function getImageMap() {
-  try {
-    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`;
-    const res = await fetch(url);
-    if (res.ok) return res.json();
-  } catch {}
-  return {};
+function httpsGet(url) {
+  return new Promise((resolve) => {
+    https.get(url, res => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch { resolve({}); }
+      });
+    }).on('error', () => resolve({}));
+  });
 }
 
 async function saveImageMap(map) {
@@ -26,7 +31,7 @@ async function saveImageMap(map) {
   const base64  = Buffer.from(json).toString('base64');
   const dataUri = `data:application/json;base64,${base64}`;
   await cloudinary.uploader.upload(dataUri, {
-    public_id:     'neema-synergy/image-map',
+    public_id:     'neema-synergy/image-map.json',
     resource_type: 'raw',
     overwrite:     true,
     invalidate:    true,
@@ -43,7 +48,8 @@ exports.handler = async (event) => {
   try {
     await cloudinary.uploader.destroy(`neema-synergy/${key}`, { invalidate: true });
 
-    const map = await getImageMap();
+    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`;
+    const map = await httpsGet(url);
     delete map[key];
     await saveImageMap(map);
 

@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const https      = require('https');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -19,17 +20,22 @@ function requireAuth(event) {
   return token && stored && token === stored;
 }
 
+function httpsGet(url) {
+  return new Promise((resolve) => {
+    https.get(url, res => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch { resolve({}); }
+      });
+    }).on('error', () => resolve({}));
+  });
+}
+
 async function getImageMap() {
-  try {
-    const res = await fetch(
-      `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`
-    );
-    if (res.ok) {
-      const text = await res.text();
-      return JSON.parse(text);
-    }
-  } catch {}
-  return {};
+  const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`;
+  return httpsGet(url);
 }
 
 async function saveImageMap(map) {
@@ -37,10 +43,10 @@ async function saveImageMap(map) {
   const base64  = Buffer.from(json).toString('base64');
   const dataUri = `data:application/json;base64,${base64}`;
   await cloudinary.uploader.upload(dataUri, {
-    public_id:    'neema-synergy/image-map',
+    public_id:     'neema-synergy/image-map.json',
     resource_type: 'raw',
-    overwrite:    true,
-    invalidate:   true,
+    overwrite:     true,
+    invalidate:    true,
   });
 }
 
@@ -58,23 +64,21 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid image data' }) };
     }
 
-    // Upload image to Cloudinary
     const result = await cloudinary.uploader.upload(dataUrl, {
       public_id:  `neema-synergy/${key}`,
       overwrite:  true,
       invalidate: true,
     });
 
-    // Update image map stored in Cloudinary
     const map = await getImageMap();
     map[key]  = result.secure_url;
     await saveImageMap(map);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, url: result.secure_url, key, mapSaved: true })
+      body: JSON.stringify({ success: true, url: result.secure_url, key })
     };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message, stack: err.stack }) };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
