@@ -339,13 +339,29 @@ async function loadSettings() {
     if (data.hours)    document.getElementById('s-hours').value    = data.hours;
 
     // About
-    if (data.tagline)      document.getElementById('s-tagline').value      = data.tagline;
-    if (data.about1)       document.getElementById('s-about1').value       = data.about1;
-    if (data.about2)       document.getElementById('s-about2').value       = data.about2;
-    if (data.years)        document.getElementById('s-years').value        = data.years;
-    if (data.events)       document.getElementById('s-events').value       = data.events;
-    if (data.satisfaction) document.getElementById('s-satisfaction').value = data.satisfaction;
-    if (data.clients)      document.getElementById('s-clients').value      = data.clients;
+    const defaultAbout = {
+      tagline: 'Where Creativity Meets Precision',
+      about1: 'Neema Synergy Events is a professional event planning and production firm that operates on a hybrid model — combining in-house creative direction with strategic vendor partnerships for logistics and technical production.',
+      about2: 'We design and execute seamless, high-impact events that merge creativity, precision, and strategic planning — creating meaningful experiences for our clients and guests.',
+      years: '8', events: '250', satisfaction: '98', clients: '120'
+    };
+    const aboutData = {
+      tagline:      data.tagline      || defaultAbout.tagline,
+      about1:       data.about1       || defaultAbout.about1,
+      about2:       data.about2       || defaultAbout.about2,
+      years:        data.years        || defaultAbout.years,
+      events:       data.events       || defaultAbout.events,
+      satisfaction: data.satisfaction || defaultAbout.satisfaction,
+      clients:      data.clients      || defaultAbout.clients,
+    };
+    document.getElementById('s-tagline').value      = aboutData.tagline;
+    document.getElementById('s-about1').value       = aboutData.about1;
+    document.getElementById('s-about2').value       = aboutData.about2;
+    document.getElementById('s-years').value        = aboutData.years;
+    document.getElementById('s-events').value       = aboutData.events;
+    document.getElementById('s-satisfaction').value = aboutData.satisfaction;
+    document.getElementById('s-clients').value      = aboutData.clients;
+    showAboutSaved(aboutData);
 
     // WhatsApp
     if (data.whatsapp)     document.getElementById('s-whatsapp').value      = data.whatsapp;
@@ -413,6 +429,7 @@ async function saveSettings(section) {
     if (data.success) {
       showToast('Settings saved');
       if (section === 'whatsapp') showWhatsAppSaved(payload);
+      if (section === 'about')    showAboutSaved(payload);
     } else showToast('Save failed', true);
   } catch {
     showToast('Save failed — server error', true);
@@ -467,4 +484,45 @@ function showMapsPreview(url) {
   iframe.style.border = '1px solid rgba(212,175,55,0.2)';
   iframe.allowFullscreen = true;
   preview.appendChild(iframe);
+}
+
+/* ---- ABOUT UI ---- */
+function showAboutSaved(data) {
+  document.getElementById('about-tagline-display').textContent = data.tagline      || '';
+  document.getElementById('about-p1-display').textContent      = data.about1       || '';
+  document.getElementById('about-p2-display').textContent      = data.about2       || '';
+  document.getElementById('about-years-display').textContent   = data.years        || '';
+  document.getElementById('about-events-display').textContent  = data.events       || '';
+  document.getElementById('about-sat-display').textContent     = data.satisfaction || '';
+  document.getElementById('about-clients-display').textContent = data.clients      || '';
+  document.getElementById('about-saved').style.display = 'block';
+  document.getElementById('about-form').style.display  = 'none';
+}
+
+function editAbout() {
+  document.getElementById('about-saved').style.display = 'none';
+  document.getElementById('about-form').style.display  = 'flex';
+}
+
+function cancelAbout() {
+  document.getElementById('about-saved').style.display = 'block';
+  document.getElementById('about-form').style.display  = 'none';
+}
+
+async function deleteAbout() {
+  if (!confirm('Reset about content to site defaults?')) return;
+  const defaults = {
+    tagline: 'Where Creativity Meets Precision',
+    about1: 'Neema Synergy Events is a professional event planning and production firm that operates on a hybrid model.',
+    about2: 'We design and execute seamless, high-impact events that merge creativity, precision, and strategic planning.',
+    years: '8', events: '250', satisfaction: '98', clients: '120'
+  };
+  document.getElementById('s-tagline').value      = defaults.tagline;
+  document.getElementById('s-about1').value       = defaults.about1;
+  document.getElementById('s-about2').value       = defaults.about2;
+  document.getElementById('s-years').value        = defaults.years;
+  document.getElementById('s-events').value       = defaults.events;
+  document.getElementById('s-satisfaction').value = defaults.satisfaction;
+  document.getElementById('s-clients').value      = defaults.clients;
+  await saveSettings('about');
 }
