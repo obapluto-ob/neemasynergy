@@ -244,6 +244,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   pointer-events: none;
 }
 .upload-box input[type="file"] {
+  pointer-events: all;
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -338,6 +339,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--black); c
   width: 100%;
   height: 100%;
   z-index: 2;
+  pointer-events: all;
 }
 
 .card-actions {
