@@ -16,7 +16,10 @@ async function getData(filename) {
   try {
     const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/${filename}?t=${Date.now()}`;
     const res = await fetch(url);
-    if (res.ok) return res.json();
+    if (res.ok) {
+      const text = await res.text();
+      return JSON.parse(text);
+    }
   } catch {}
   return {};
 }

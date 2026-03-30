@@ -24,7 +24,10 @@ async function getImageMap() {
     const res = await fetch(
       `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/neema-synergy/image-map.json?t=${Date.now()}`
     );
-    if (res.ok) return res.json();
+    if (res.ok) {
+      const text = await res.text();
+      return JSON.parse(text);
+    }
   } catch {}
   return {};
 }
@@ -63,15 +66,15 @@ exports.handler = async (event) => {
     });
 
     // Update image map stored in Cloudinary
-    const map    = await getImageMap();
-    map[key]     = result.secure_url;
+    const map = await getImageMap();
+    map[key]  = result.secure_url;
     await saveImageMap(map);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, url: result.secure_url, key })
+      body: JSON.stringify({ success: true, url: result.secure_url, key, mapSaved: true })
     };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message, stack: err.stack }) };
   }
 };
