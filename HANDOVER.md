@@ -10,7 +10,7 @@
 **Admin Panel:** https://neemasynergy.netlify.app/admin/
 **Admin Password:** neema2025
 
-> IMPORTANT: Change your admin password after first login by contacting your developer.
+> IMPORTANT: Change your admin password after first login via Admin Panel → Change Password tab.
 
 ---
 

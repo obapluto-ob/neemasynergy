@@ -704,3 +704,50 @@ async function deleteEmail() {
   document.getElementById('email-form').style.display  = 'flex';
   showToast('EmailJS disconnected');
 }
+
+/* ---- CHANGE PASSWORD ---- */
+async function changePassword() {
+  const current  = document.getElementById('cp-current').value.trim();
+  const newPw    = document.getElementById('cp-new').value.trim();
+  const confirm  = document.getElementById('cp-confirm').value.trim();
+  const errorEl  = document.getElementById('cp-error');
+
+  errorEl.textContent = '';
+
+  if (!current || !newPw || !confirm) {
+    errorEl.textContent = 'All fields are required.'; return;
+  }
+  if (newPw.length < 6) {
+    errorEl.textContent = 'New password must be at least 6 characters.'; return;
+  }
+  if (newPw !== confirm) {
+    errorEl.textContent = 'New passwords do not match.'; return;
+  }
+
+  // Verify current password by attempting login
+  const verifyRes  = await fetch('/admin/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: current })
+  });
+  const verifyData = await verifyRes.json();
+  if (!verifyData.success) {
+    errorEl.textContent = 'Current password is incorrect.'; return;
+  }
+
+  // Hash new password and save
+  const newHash = await sha256(newPw);
+  const res     = await fetch('/admin/api/change-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': AUTH_TOKEN },
+    body: JSON.stringify({ newPasswordHash: newHash })
+  });
+  const data = await res.json();
+
+  if (data.success) {
+    showToast('Password changed. Please log in again.');
+    setTimeout(() => adminLogout(), 2000);
+  } else {
+    errorEl.textContent = data.error || 'Failed to change password.';
+  }
+}

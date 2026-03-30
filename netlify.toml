@@ -9,6 +9,11 @@
   status = 200
 
 [[redirects]]
+  from   = "/admin/api/change-password"
+  to     = "/.netlify/functions/change-password"
+  status = 200
+
+[[redirects]]
   from   = "/admin/api/upload"
   to     = "/.netlify/functions/upload"
   status = 200

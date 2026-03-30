@@ -44,6 +44,7 @@
         <a href="#" class="nav-item" data-tab="whatsapp">WhatsApp</a>
         <a href="#" class="nav-item" data-tab="maps">Google Maps</a>
         <a href="#" class="nav-item" data-tab="email-setup">Email Setup</a>
+        <a href="#" class="nav-item" data-tab="change-password">Change Password</a>
       </nav>
       <button class="btn-logout" onclick="adminLogout()">Logout</button>
     </aside>
@@ -379,6 +380,30 @@
             <button class="btn-save" onclick="saveSettings('email')">Save & Activate</button>
             <button class="btn-delete-single" style="width:auto;padding:13px 24px;" onclick="cancelEmail()">Cancel</button>
           </div>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="tab-content" id="tab-change-password">
+        <div class="tab-header">
+          <h2>Change Password</h2>
+          <p>Update your admin panel password. You will need to log in again after changing it.</p>
+        </div>
+        <div class="settings-form" style="max-width:400px;">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="cp-current" placeholder="Enter current password" />
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="cp-new" placeholder="Enter new password" />
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="cp-confirm" placeholder="Confirm new password" />
+          </div>
+          <p id="cp-error" style="color:#e05555;font-size:0.82rem;min-height:20px;"></p>
+          <button class="btn-save" onclick="changePassword()">Update Password</button>
         </div>
       </div>
 
