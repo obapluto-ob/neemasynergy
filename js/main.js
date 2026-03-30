@@ -4,6 +4,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ---- SCROLL INDICATOR ---- */
+  const heroScroll = document.querySelector('.hero-scroll');
+  window.addEventListener('scroll', () => {
+    if (heroScroll) {
+      heroScroll.style.opacity = window.scrollY > 100 ? '0' : '1';
+    }
+  });
+
   /* ---- COPYRIGHT YEAR ---- */
   document.querySelectorAll('#copy-year').forEach(el => {
     el.textContent = new Date().getFullYear();

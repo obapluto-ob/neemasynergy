@@ -43,6 +43,7 @@
         <a href="#" class="nav-item" data-tab="about-text">About Content</a>
         <a href="#" class="nav-item" data-tab="whatsapp">WhatsApp</a>
         <a href="#" class="nav-item" data-tab="maps">Google Maps</a>
+        <a href="#" class="nav-item" data-tab="email-setup">Email Setup</a>
       </nav>
       <button class="btn-logout" onclick="adminLogout()">Logout</button>
     </aside>
@@ -176,11 +177,11 @@
           </div>
         </div>
         <div id="social-form" class="settings-form">
-          <div class="form-group"><label>Instagram URL</label><input type="url" id="s-instagram" placeholder="https://instagram.com/yourpage" /></div>
-          <div class="form-group"><label>Facebook URL</label><input type="url" id="s-facebook" placeholder="https://facebook.com/yourpage" /></div>
-          <div class="form-group"><label>LinkedIn URL</label><input type="url" id="s-linkedin" placeholder="https://linkedin.com/company/yourpage" /></div>
-          <div class="form-group"><label>Twitter / X URL</label><input type="url" id="s-twitter" placeholder="https://x.com/yourpage" /></div>
-          <div class="form-group"><label>YouTube URL</label><input type="url" id="s-youtube" placeholder="https://youtube.com/@yourchannel" /></div>
+          <div class="form-group"><label>Instagram URL</label><input type="url" id="s-instagram" placeholder="https://instagram.com/yourpage" /><small style="color:#888;font-size:0.72rem;margin-top:3px;display:block;">Find yours at <a href="https://instagram.com" target="_blank" style="color:var(--gold);">instagram.com</a></small></div>
+          <div class="form-group"><label>Facebook URL</label><input type="url" id="s-facebook" placeholder="https://facebook.com/yourpage" /><small style="color:#888;font-size:0.72rem;margin-top:3px;display:block;">Find yours at <a href="https://facebook.com" target="_blank" style="color:var(--gold);">facebook.com</a></small></div>
+          <div class="form-group"><label>LinkedIn URL</label><input type="url" id="s-linkedin" placeholder="https://linkedin.com/company/yourpage" /><small style="color:#888;font-size:0.72rem;margin-top:3px;display:block;">Find yours at <a href="https://linkedin.com" target="_blank" style="color:var(--gold);">linkedin.com</a></small></div>
+          <div class="form-group"><label>Twitter / X URL</label><input type="url" id="s-twitter" placeholder="https://x.com/yourpage" /><small style="color:#888;font-size:0.72rem;margin-top:3px;display:block;">Find yours at <a href="https://x.com" target="_blank" style="color:var(--gold);">x.com</a></small></div>
+          <div class="form-group"><label>YouTube URL</label><input type="url" id="s-youtube" placeholder="https://youtube.com/@yourchannel" /><small style="color:#888;font-size:0.72rem;margin-top:3px;display:block;">Find yours at <a href="https://youtube.com" target="_blank" style="color:var(--gold);">youtube.com</a></small></div>
           <div style="display:flex;gap:12px;">
             <button class="btn-save" onclick="saveSettings('social')">Save Social Links</button>
             <button class="btn-delete-single" style="width:auto;padding:13px 24px;" onclick="cancelSocial()">Cancel</button>
@@ -332,12 +333,52 @@
             <label>Google Maps Embed URL</label>
             <input type="url" id="s-maps" placeholder="https://www.google.com/maps/embed?pb=..." />
             <small style="color:#888;font-size:0.75rem;margin-top:4px;display:block;">Go to Google Maps → Share → Embed a map → copy the src URL only</small>
+            <a href="https://www.google.com/maps" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--gold);margin-top:6px;display:inline-block;">Open Google Maps →</a>
           </div>
           <div style="display:flex;gap:12px;">
             <button class="btn-save" onclick="saveSettings('maps')">Save Map</button>
             <button class="btn-delete-single" style="width:auto;padding:13px 24px;" onclick="cancelMaps()">Cancel</button>
           </div>
           <div id="maps-preview" style="margin-top:24px;"></div>
+        </div>
+      </div>
+
+      <!-- EMAIL SETUP -->
+      <div class="tab-content" id="tab-email-setup">
+        <div class="tab-header">
+          <h2>Email Setup</h2>
+          <p>Connect your email so the contact form sends messages directly to your inbox.</p>
+        </div>
+        <div id="email-saved" style="display:none;">
+          <div class="saved-card" style="flex-direction:column;gap:16px;">
+            <div class="saved-info" style="width:100%;">
+              <span class="box-label">EmailJS Connected</span>
+              <p style="color:#4caf50;font-size:0.85rem;margin-top:10px;">&#10003; Contact form is active and sending emails</p>
+              <p id="email-service-display" style="color:#888;font-size:0.8rem;margin-top:6px;"></p>
+            </div>
+            <div class="saved-actions" style="flex-direction:row;">
+              <button class="btn-save" onclick="editEmail()">Edit</button>
+              <button class="btn-delete-single" style="width:auto;padding:13px 24px;margin:0;" onclick="deleteEmail()">Disconnect</button>
+            </div>
+          </div>
+        </div>
+        <div id="email-form" class="settings-form">
+          <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);padding:20px;margin-bottom:8px;">
+            <p style="font-size:0.82rem;color:#ccc;line-height:1.8;">
+              <strong style="color:var(--gold);">How to set up:</strong><br>
+              1. Go to <a href="https://www.emailjs.com" target="_blank" style="color:var(--gold);">emailjs.com</a> and create a free account<br>
+              2. Add your email service (Gmail, Outlook, etc.)<br>
+              3. Create an email template<br>
+              4. Copy your Public Key, Service ID and Template ID below
+            </p>
+          </div>
+          <div class="form-group"><label>EmailJS Public Key</label><input type="text" id="s-emailjs-key" placeholder="user_xxxxxxxxxxxxxxxxx" /></div>
+          <div class="form-group"><label>Service ID</label><input type="text" id="s-emailjs-service" placeholder="service_xxxxxxx" /></div>
+          <div class="form-group"><label>Template ID</label><input type="text" id="s-emailjs-template" placeholder="template_xxxxxxx" /></div>
+          <div style="display:flex;gap:12px;">
+            <button class="btn-save" onclick="saveSettings('email')">Save & Activate</button>
+            <button class="btn-delete-single" style="width:auto;padding:13px 24px;" onclick="cancelEmail()">Cancel</button>
+          </div>
         </div>
       </div>
 

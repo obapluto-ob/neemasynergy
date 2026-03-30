@@ -390,6 +390,13 @@ async function loadSettings() {
     if (data.whatsappShow !== undefined) document.getElementById('s-whatsapp-show').value = String(data.whatsappShow);
     if (data.whatsapp) showWhatsAppSaved(data);
 
+    // Email
+    if (data.emailjsPublicKey) {
+      document.getElementById('s-emailjs-key').value      = data.emailjsPublicKey;
+      document.getElementById('s-emailjs-service').value  = data.emailjsServiceId  || '';
+      document.getElementById('s-emailjs-template').value = data.emailjsTemplateId || '';
+      showEmailSaved(data);
+    }
     // Maps
     if (data.mapsUrl) {
       document.getElementById('s-maps').value = data.mapsUrl;
@@ -439,6 +446,11 @@ async function saveSettings(section) {
     payload.mapsUrl = document.getElementById('s-maps').value.trim();
     showMapsPreview(payload.mapsUrl);
   }
+  if (section === 'email') {
+    payload.emailjsPublicKey  = document.getElementById('s-emailjs-key').value.trim();
+    payload.emailjsServiceId  = document.getElementById('s-emailjs-service').value.trim();
+    payload.emailjsTemplateId = document.getElementById('s-emailjs-template').value.trim();
+  }
 
   try {
     const res  = await fetch('/admin/api/settings', {
@@ -454,6 +466,7 @@ async function saveSettings(section) {
       if (section === 'contact')  showContactSaved(payload);
       if (section === 'social')   showSocialSaved(payload);
       if (section === 'maps')     showMapsSaved(payload.mapsUrl);
+      if (section === 'email')    showEmailSaved(payload);
     } else showToast('Save failed', true);
   } catch {
     showToast('Save failed — server error', true);
@@ -652,4 +665,42 @@ async function deleteMaps() {
   document.getElementById('maps-saved').style.display = 'none';
   document.getElementById('maps-form').style.display  = 'flex';
   showToast('Map removed');
+}
+
+/* ---- EMAIL UI ---- */
+function showEmailSaved(data) {
+  const serviceId = data.emailjsServiceId || document.getElementById('s-emailjs-service').value;
+  document.getElementById('email-service-display').textContent = 'Service ID: ' + serviceId;
+  document.getElementById('email-saved').style.display = 'block';
+  document.getElementById('email-form').style.display  = 'none';
+}
+
+function editEmail() {
+  document.getElementById('email-saved').style.display = 'none';
+  document.getElementById('email-form').style.display  = 'flex';
+}
+
+function cancelEmail() {
+  const key = document.getElementById('s-emailjs-key').value;
+  if (key) showEmailSaved({});
+  else {
+    document.getElementById('email-saved').style.display = 'none';
+    document.getElementById('email-form').style.display  = 'flex';
+  }
+}
+
+async function deleteEmail() {
+  if (!confirm('Disconnect EmailJS? The contact form will stop sending emails.')) return;
+  document.getElementById('s-emailjs-key').value      = '';
+  document.getElementById('s-emailjs-service').value  = '';
+  document.getElementById('s-emailjs-template').value = '';
+  const payload = { emailjsPublicKey: '', emailjsServiceId: '', emailjsTemplateId: '' };
+  await fetch('/admin/api/settings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': AUTH_TOKEN },
+    body: JSON.stringify(payload)
+  });
+  document.getElementById('email-saved').style.display = 'none';
+  document.getElementById('email-form').style.display  = 'flex';
+  showToast('EmailJS disconnected');
 }
