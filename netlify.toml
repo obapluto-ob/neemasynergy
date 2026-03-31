@@ -2,6 +2,12 @@
   publish = "."
   functions = "netlify/functions"
 
+# ---- FAVICON ----
+[[redirects]]
+  from   = "/favicon.ico"
+  to     = "/images/logo.jpg"
+  status = 200
+
 # ---- API ROUTES ----
 [[redirects]]
   from   = "/admin/api/login"
@@ -11,6 +17,16 @@
 [[redirects]]
   from   = "/admin/api/change-password"
   to     = "/.netlify/functions/change-password"
+  status = 200
+
+[[redirects]]
+  from   = "/api/visitors"
+  to     = "/.netlify/functions/visitors"
+  status = 200
+
+[[redirects]]
+  from   = "/admin/api/visitors"
+  to     = "/.netlify/functions/visitors"
   status = 200
 
 [[redirects]]
