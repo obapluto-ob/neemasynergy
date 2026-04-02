@@ -103,7 +103,7 @@ function initAdmin() {
 
   buildGrid('portfolioGrid', PORTFOLIO_ITEMS);
   buildGrid('servicesGrid',  SERVICES_ITEMS);
-  buildGrid('teamGrid',      TEAM_ITEMS);
+  buildGrid('teamGrid',      TEAM_ITEMS, true);
   initDragDrop();
   loadExistingImages();
   loadSettings();
@@ -129,7 +129,7 @@ async function loadExistingImages() {
 }
 
 /* ---- BUILD GRIDS ---- */
-function buildGrid(containerId, items) {
+function buildGrid(containerId, items, isTeam = false) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
   items.forEach(item => {
@@ -158,12 +158,39 @@ function buildGrid(containerId, items) {
 
     const info = document.createElement('div');
     info.className = 'card-info';
-    const h4 = document.createElement('h4');
-    h4.textContent = item.label;
-    const span = document.createElement('span');
-    span.textContent = item.category;
-    info.appendChild(h4);
-    info.appendChild(span);
+
+    if (isTeam) {
+      // Editable name and role for team members
+      const nameInput = document.createElement('input');
+      nameInput.type        = 'text';
+      nameInput.value       = item.label;
+      nameInput.placeholder = 'Team member name';
+      nameInput.dataset.field = 'name';
+      nameInput.style.cssText = 'background:#1a1a1a;border:1px solid rgba(212,175,55,0.2);color:#fff;padding:6px 10px;font-size:0.82rem;width:100%;margin-bottom:6px;outline:none;font-family:inherit;';
+
+      const roleInput = document.createElement('input');
+      roleInput.type        = 'text';
+      roleInput.value       = item.category;
+      roleInput.placeholder = 'Role / Title';
+      roleInput.dataset.field = 'role';
+      roleInput.style.cssText = 'background:#1a1a1a;border:1px solid rgba(212,175,55,0.2);color:var(--gold);padding:6px 10px;font-size:0.75rem;width:100%;outline:none;font-family:inherit;';
+
+      const saveNameBtn = document.createElement('button');
+      saveNameBtn.textContent = 'Save Name & Role';
+      saveNameBtn.style.cssText = 'margin-top:8px;padding:7px 12px;background:var(--gold);color:#000;border:none;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;width:100%;font-family:inherit;';
+      saveNameBtn.addEventListener('click', () => saveTeamMember(item.key, nameInput.value.trim(), roleInput.value.trim(), saveNameBtn));
+
+      info.appendChild(nameInput);
+      info.appendChild(roleInput);
+      info.appendChild(saveNameBtn);
+    } else {
+      const h4 = document.createElement('h4');
+      h4.textContent = item.label;
+      const span = document.createElement('span');
+      span.textContent = item.category;
+      info.appendChild(h4);
+      info.appendChild(span);
+    }
 
     const label = document.createElement('label');
     label.className = 'card-upload-btn';
@@ -172,7 +199,7 @@ function buildGrid(containerId, items) {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
-    fileInput.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;';
+    fileInput.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;pointer-events:all;';
     fileInput.addEventListener('change', function () { handleUpload(this.files[0], item.key, labelText); });
     label.appendChild(labelText);
     label.appendChild(fileInput);
@@ -383,6 +410,9 @@ async function loadSettings() {
     document.getElementById('s-satisfaction').value = aboutData.satisfaction;
     document.getElementById('s-clients').value      = aboutData.clients;
     showAboutSaved(aboutData);
+
+    // Load team names
+    loadTeamNames(data);
 
     // WhatsApp
     if (data.whatsapp)     document.getElementById('s-whatsapp').value      = data.whatsapp;
@@ -750,4 +780,40 @@ async function changePassword() {
   } else {
     errorEl.textContent = data.error || 'Failed to change password.';
   }
+}
+
+/* ---- TEAM MEMBER NAME & ROLE ---- */
+async function saveTeamMember(key, name, role, btn) {
+  if (!name) { showToast('Name cannot be empty', true); return; }
+  btn.textContent = 'Saving…';
+
+  const payload = {};
+  payload[key + '_name'] = name;
+  payload[key + '_role'] = role;
+
+  try {
+    const res  = await fetch('/admin/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': AUTH_TOKEN },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) showToast('Team member updated');
+    else showToast('Save failed', true);
+  } catch {
+    showToast('Save failed — server error', true);
+  }
+  btn.textContent = 'Save Name & Role';
+}
+
+// Load saved team names into inputs after settings load
+function loadTeamNames(data) {
+  TEAM_ITEMS.forEach(item => {
+    const card = document.querySelector(`.portfolio-admin-card[data-key="${item.key}"]`);
+    if (!card) return;
+    const nameInput = card.querySelector('input[data-field="name"]');
+    const roleInput = card.querySelector('input[data-field="role"]');
+    if (nameInput && data[item.key + '_name']) nameInput.value = data[item.key + '_name'];
+    if (roleInput && data[item.key + '_role']) roleInput.value = data[item.key + '_role'];
+  });
 }

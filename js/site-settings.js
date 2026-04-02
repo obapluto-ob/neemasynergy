@@ -54,6 +54,12 @@
     if (s.events)  document.querySelectorAll('[data-site="events"]').forEach(el => { el.textContent = s.events + '+'; el.dataset.target = s.events; });
     if (s.satisfaction) document.querySelectorAll('[data-site="satisfaction"]').forEach(el => { el.textContent = s.satisfaction + '%'; el.dataset.target = s.satisfaction; });
     if (s.clients) document.querySelectorAll('[data-site="clients"]').forEach(el => { el.textContent = s.clients + '+'; el.dataset.target = s.clients; });
+
+    // Team names and roles
+    ['team-1','team-2','team-3'].forEach(key => {
+      if (s[key + '_name']) document.querySelectorAll(`[data-team-name="${key}"]`).forEach(el => el.textContent = s[key + '_name']);
+      if (s[key + '_role']) document.querySelectorAll(`[data-team-role="${key}"]`).forEach(el => el.textContent = s[key + '_role']);
+    });
   }
 
   function applyWhatsApp(s) {
