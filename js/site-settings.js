@@ -55,11 +55,18 @@
     if (s.satisfaction) document.querySelectorAll('[data-site="satisfaction"]').forEach(el => { el.textContent = s.satisfaction + '%'; el.dataset.target = s.satisfaction; });
     if (s.clients) document.querySelectorAll('[data-site="clients"]').forEach(el => { el.textContent = s.clients + '+'; el.dataset.target = s.clients; });
 
-    // Team names and roles
-    ['team-1','team-2','team-3'].forEach(key => {
-      if (s[key + '_name']) document.querySelectorAll(`[data-team-name="${key}"]`).forEach(el => el.textContent = s[key + '_name']);
-      if (s[key + '_role']) document.querySelectorAll(`[data-team-role="${key}"]`).forEach(el => el.textContent = s[key + '_role']);
-    });
+    // Team names and roles — run after DOM ready
+    const applyTeam = () => {
+      ['team-1','team-2','team-3'].forEach(key => {
+        if (s[key + '_name']) document.querySelectorAll('[data-team-name="' + key + '"]').forEach(el => el.textContent = s[key + '_name']);
+        if (s[key + '_role']) document.querySelectorAll('[data-team-role="' + key + '"]').forEach(el => el.textContent = s[key + '_role']);
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', applyTeam);
+    } else {
+      applyTeam();
+    }
   }
 
   function applyWhatsApp(s) {
