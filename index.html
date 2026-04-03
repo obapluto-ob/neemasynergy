@@ -13,6 +13,13 @@
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/png" href="/images/logo.jpg" />
+  <script>
+    document.documentElement.style.visibility = 'hidden';
+    fetch('/api/settings').then(r=>r.json()).then(s=>{
+      if(s.siteUnlocked===true){document.documentElement.style.visibility='';}
+      else{window.location.replace('/paywall.html');}
+    }).catch(()=>{window.location.replace('/paywall.html');});
+  </script>
 </head>
 <body>
 
