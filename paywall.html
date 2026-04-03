@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neema Synergy Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --gold: #d4af37; --black: #0a0a0a; }
+
+    body {
+      background: var(--black);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .wrap { max-width: 560px; }
+
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 48px;
+    }
+    .logo-text span { color: var(--gold); }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      border: 2px solid rgba(212,175,55,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      font-size: 2rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    h1 em { color: var(--gold); font-style: italic; }
+
+    p {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin: 0 auto 32px;
+    }
+
+    .admin-link {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 1px solid rgba(212,175,55,0.4);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-top: 48px;
+    }
+    .admin-link:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo-text">Neema <span>Synergy</span></div>
+
+    <div class="icon">🔒</div>
+
+    <h1>This Site Is <em>Not Available</em></h1>
+    <div class="divider"></div>
+    <p>
+      This website is currently unavailable.<br>
+      Please contact the site owner to resolve this.
+    </p>
+
+
+  </div>
+
+  <script>
+    // If site gets unlocked while on this page, redirect home
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(s => {
+        if (s.siteUnlocked === true) window.location.replace('/');
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

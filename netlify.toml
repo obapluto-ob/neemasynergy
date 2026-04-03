@@ -8,6 +8,12 @@
   to     = "/images/logo.jpg"
   status = 200
 
+# ---- PAYWALL (never redirect admin or paywall itself) ----
+[[redirects]]
+  from = "/paywall.html"
+  to   = "/paywall.html"
+  status = 200
+
 # ---- API ROUTES ----
 [[redirects]]
   from   = "/admin/api/login"

@@ -45,6 +45,7 @@
         <a href="#" class="nav-item" data-tab="maps">Google Maps</a>
         <a href="#" class="nav-item" data-tab="email-setup">Email Setup</a>
         <a href="#" class="nav-item" data-tab="change-password">Change Password</a>
+        <a href="#" class="nav-item" data-tab="site-access">Site Access</a>
       </nav>
       <button class="btn-logout" onclick="adminLogout()">Logout</button>
     </aside>
@@ -383,6 +384,22 @@
         </div>
       </div>
 
+      <!-- SITE ACCESS -->
+      <div class="tab-content" id="tab-site-access">
+        <div class="tab-header">
+          <h2>Site Access</h2>
+          <p>Control whether the public website is visible to visitors.</p>
+        </div>
+        <div id="site-access-status" style="margin-bottom:24px;padding:20px;border:1px solid rgba(212,175,55,0.2);background:rgba(212,175,55,0.04);">
+          <p style="font-size:0.85rem;color:#ccc;">Current status: <strong id="site-status-label" style="color:var(--gold);">Loading…</strong></p>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button class="btn-save" id="btn-unlock-site" onclick="setSiteAccess(true)">✓ Unlock Site — Go Live</button>
+          <button class="btn-delete-single" style="width:auto;padding:13px 24px;" id="btn-lock-site" onclick="setSiteAccess(false)">🔒 Lock Site</button>
+        </div>
+        <p style="margin-top:16px;font-size:0.78rem;color:#666;">When locked, all visitors see a "site unavailable" page. The admin panel remains accessible.</p>
+      </div>
+
       <!-- CHANGE PASSWORD -->
       <div class="tab-content" id="tab-change-password">
         <div class="tab-header">
@@ -410,6 +427,21 @@
     </main>
   </div>
 
+  <script>
+    (function () {
+      const SECRET_KEY = 'Peace@26';
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('key') !== SECRET_KEY) {
+        // Store key in session so page reloads still work
+        const saved = sessionStorage.getItem('nse_admin_key');
+        if (saved !== SECRET_KEY) {
+          window.location.replace('/paywall.html');
+        }
+      } else {
+        sessionStorage.setItem('nse_admin_key', SECRET_KEY);
+      }
+    })();
+  </script>
   <script src="/admin/admin.js"></script>
 </body>
 </html>

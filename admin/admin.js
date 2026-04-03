@@ -107,6 +107,7 @@ function initAdmin() {
   initDragDrop();
   loadExistingImages();
   loadSettings();
+  loadSiteAccessStatus();
 }
 
 /* ---- LOAD EXISTING IMAGES FROM SERVER ---- */
@@ -733,6 +734,46 @@ async function deleteEmail() {
   document.getElementById('email-saved').style.display = 'none';
   document.getElementById('email-form').style.display  = 'flex';
   showToast('EmailJS disconnected');
+}
+
+/* ---- SITE ACCESS ---- */
+async function setSiteAccess(unlock) {
+  const label = unlock ? 'Unlocking…' : 'Locking…';
+  document.getElementById('site-status-label').textContent = label;
+  try {
+    const res  = await fetch('/admin/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': AUTH_TOKEN },
+      body: JSON.stringify({ siteUnlocked: unlock })
+    });
+    const data = await res.json();
+    if (data.success) {
+      updateSiteStatusUI(unlock);
+      showToast(unlock ? 'Site is now live!' : 'Site is now locked');
+    } else {
+      showToast('Failed to update site access', true);
+      loadSiteAccessStatus();
+    }
+  } catch {
+    showToast('Server error', true);
+    loadSiteAccessStatus();
+  }
+}
+
+function updateSiteStatusUI(unlocked) {
+  const label = document.getElementById('site-status-label');
+  if (label) {
+    label.textContent = unlocked ? 'LIVE — visible to public' : 'LOCKED — visitors see paywall';
+    label.style.color = unlocked ? '#4caf50' : '#e05555';
+  }
+}
+
+async function loadSiteAccessStatus() {
+  try {
+    const res  = await fetch('/admin/api/settings', { headers: { 'x-admin-token': AUTH_TOKEN } });
+    const data = await res.json();
+    updateSiteStatusUI(data.siteUnlocked === true);
+  } catch {}
 }
 
 /* ---- CHANGE PASSWORD ---- */

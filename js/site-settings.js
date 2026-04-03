@@ -7,6 +7,10 @@
   fetch('/api/settings')
     .then(r => r.json())
     .then(s => {
+      if (s.siteUnlocked === false || s.siteUnlocked === 'false') {
+        window.location.replace('/paywall.html');
+        return;
+      }
       applyContact(s);
       applySocial(s);
       applyAbout(s);
