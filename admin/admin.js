@@ -772,7 +772,12 @@ async function loadSiteAccessStatus() {
   try {
     const res  = await fetch('/admin/api/settings', { headers: { 'x-admin-token': AUTH_TOKEN } });
     const data = await res.json();
-    updateSiteStatusUI(data.siteUnlocked === true);
+    // If siteUnlocked has never been set, lock it now
+    if (data.siteUnlocked === undefined || data.siteUnlocked === null) {
+      await setSiteAccess(false);
+    } else {
+      updateSiteStatusUI(data.siteUnlocked === true);
+    }
   } catch {}
 }
 

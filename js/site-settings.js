@@ -17,7 +17,10 @@
       applyWhatsApp(s);
       applyMaps(s);
     })
-    .catch(() => {});
+    .catch(() => {
+      // If settings can't load, default to locked
+      window.location.replace('/paywall.html');
+    });
 
   function applyContact(s) {
     if (s.email) {
