@@ -19,6 +19,8 @@
       if(s.siteUnlocked===true){document.documentElement.style.visibility='';}
       else{window.location.replace('/paywall.html');}
     }).catch(()=>{window.location.replace('/paywall.html');});
+    // Timeout fallback — if fetch hangs, lock after 5s
+    setTimeout(()=>{if(document.documentElement.style.visibility==='hidden')window.location.replace('/paywall.html');},5000);
   </script>
 </head>
 <body>
